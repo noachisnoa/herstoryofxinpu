@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>新埔女路</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  background: #18191B;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  font-family: 'Noto Serif TC', serif;
+}
+
+.phone {
+  width: 375px;
+  min-height: 100vh;
+  background: #18191B;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Glowing orbs ── */
+.orb {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+}
+/* Left orb: FF55D7 pink — tilted ellipse near top */
+.orb-l {
+  width: 420px; height: 200px;
+  background: radial-gradient(ellipse at center,
+    rgba(255,85,215,0.45) 0%,
+    rgba(255,120,210,0.22) 35%,
+    rgba(255,177,194,0.08) 60%,
+    transparent 80%);
+  top: 2%; left: -140px;
+  transform: rotate(-20deg);
+  animation: orbPulse1 5s ease-in-out infinite alternate;
+}
+/* Right orb: FCA39E orange — tilted ellipse lower right */
+.orb-r {
+  width: 380px; height: 190px;
+  background: radial-gradient(ellipse at center,
+    rgba(252,163,158,0.45) 0%,
+    rgba(255,200,160,0.22) 35%,
+    rgba(255,220,177,0.08) 60%,
+    transparent 80%);
+  bottom: 0%; right: -120px;
+  transform: rotate(15deg);
+  animation: orbPulse2 6.5s ease-in-out infinite alternate;
+}
+@keyframes orbPulse1 {
+  0%   { opacity: 0.5; transform: rotate(-20deg) scale(0.93); }
+  40%  { opacity: 0.9; transform: rotate(-20deg) scale(1.05); }
+  70%  { opacity: 0.6; transform: rotate(-20deg) scale(0.97); }
+  100% { opacity: 1;   transform: rotate(-20deg) scale(1.08); }
+}
+@keyframes orbPulse2 {
+  0%   { opacity: 1;   transform: rotate(15deg) scale(1.06); }
+  35%  { opacity: 0.5; transform: rotate(15deg) scale(0.92); }
+  65%  { opacity: 0.8; transform: rotate(15deg) scale(1.03); }
+  100% { opacity: 0.55; transform: rotate(15deg) scale(0.94); }
+}
+
+/* ── Header ── */
+.header {
+  position: relative; z-index: 2;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 20px 6px;
+}
+.hd-l { font-size: 11.5px; color: #FF66C4; letter-spacing: 0.03em; font-weight: 500; font-family: 'Noto Serif TC', serif; }
+.hd-r { font-size: 11.5px; color: #FF66C4; letter-spacing: 0.05em; font-weight: 500; font-family: 'Noto Serif TC', serif; }
+
+/* ── Progress ── */
+.prog-wrap {
+  position: relative; z-index: 2;
+  padding: 10px 20px 18px;
+}
+.prog-track {
+  height: 7px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 4px;
+  position: relative;
+}
+.prog-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #FF66C4, #FFF7C4);
+  transition: width 0.55s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 0 10px rgba(255,102,196,0.7);
+}
+.prog-star {
+  position: absolute;
+  top: 50%; transform: translate(-50%, -50%);
+  transition: left 0.55s cubic-bezier(.4,0,.2,1);
+  font-size: 0; /* use SVG star */
+  line-height: 0;
+}
+.prog-star svg {
+  width: 22px; height: 22px;
+  overflow: visible;
+  filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px #ffaadd);
+}
+
+/* ── Question card ── */
+.q-card {
+  position: relative; z-index: 2;
+  margin: 2px 18px 18px;
+  border-radius: 18px;
+  padding: 22px 22px 36px;
+  min-height: 155px;
+  /* white glassmorphism */
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 4px 24px rgba(255,255,255,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.q-num {
+  font-size: 34px; font-weight: 900; color: #FFB5E3;
+  margin-bottom: 10px; letter-spacing: 0.02em;
+  font-family: 'Noto Serif TC', serif;
+  text-shadow: 0 0 12px rgba(255,181,227,0.35);
+}
+.q-txt {
+  font-size: 14.5px; color: #FFB5E3; line-height: 1.75;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 900;
+}
+
+/* ── Sparkle star (bottom-right of card) ── */
+.sparkle {
+  position: absolute; z-index: 3;
+  bottom: -22px; right: 14px;
+  width: 52px; height: 52px;
+  animation: sparklePulse 2.8s ease-in-out infinite;
+}
+.sparkle svg { width: 100%; height: 100%; overflow: visible; }
+@keyframes sparklePulse {
+  0%,100% { opacity: 0.8; transform: scale(1) rotate(0deg); }
+  50%      { opacity: 1;   transform: scale(1.1) rotate(12deg); }
+}
+
+/* ── Options ── */
+.opts {
+  position: relative; z-index: 2;
+  flex: 1;
+  display: flex; flex-direction: column;
+  gap: 13px;
+  padding: 10px 18px 0;
+}
+
+.opt {
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 13.5px; font-weight: 700;
+  color: #514242 !important;
+  line-height: 1.55;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #ffffff 0%, #ffcce8 45%, #FF95D6 100%);
+  box-shadow:
+    0 0 10px rgba(255,149,214,0.28),
+    0 0 20px rgba(255,149,214,0.12),
+    0 2px 8px rgba(0,0,0,0.12);
+  transition: transform 0.13s, box-shadow 0.13s;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.opt::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, transparent 50%);
+  border-radius: 50px;
+  pointer-events: none;
+  z-index: -1;
+}
+.opt:active { transform: scale(0.97); }
+.opt.flash {
+  background: radial-gradient(ellipse at center, #ffcce8 0%, #FF95D6 60%, #e060b0 100%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.9), 0 0 16px rgba(255,149,214,0.5);
+  transform: scale(0.98);
+}
+
+/* ── Nav ── */
+.nav {
+  position: relative; z-index: 2;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 28px 34px;
+}
+.nav-btn {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.22);
+  background: rgba(255,255,255,0.07);
+  color: #fff; font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, transform 0.12s, opacity 0.25s;
+  backdrop-filter: blur(6px);
+}
+.nav-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.07); }
+.nav-btn:active { transform: scale(0.93); }
+.nav-btn.hide { opacity: 0; pointer-events: none; }
+
+/* ── Result screen ── */
+#result {
+  display: none;
+  position: relative; z-index: 2;
+  flex: 1; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  background: #18191B;
+}
+
+/* 4 orbs inside scroll content, position:absolute relative to res-page-bg */
+.res-page-bg {
+  position: absolute; top: 0; left: 0; right: 0;
+  min-height: 100%; height: 100%;
+  pointer-events: none; overflow: hidden;
+  z-index: 0;
+}
+.res-orb { position: absolute; border-radius: 50%; pointer-events: none; }
+/* 4 orbs — evenly distributed vertically, res-page-bg height set by JS */
+.res-orb-1 {
+  width: 320px; height: 200px;
+  top: 6%; left: -130px;
+  transform: rotate(-20deg);
+  animation: orbPulse1 5s ease-in-out infinite alternate;
+}
+.res-orb-2 {
+  width: 280px; height: 165px;
+  top: 28%; right: -110px;
+  transform: rotate(16deg);
+  animation: orbPulse2 6.5s ease-in-out infinite alternate;
+}
+.res-orb-3 {
+  width: 300px; height: 170px;
+  top: 55%; left: -120px;
+  transform: rotate(-18deg);
+  animation: orbPulse1 4.5s ease-in-out infinite alternate;
+}
+.res-orb-4 {
+  width: 270px; height: 155px;
+  top: 78%; right: -95px;
+  transform: rotate(14deg);
+  animation: orbPulse2 5.5s ease-in-out infinite alternate;
+}
+
+/* Hero zone */
+.res-hero-zone {
+  position: relative; flex-shrink: 0;
+  height: 320px; overflow: visible;
+}
+.res-bg-title {
+  position: absolute;
+  top: 24px; left: 0; right: 0;
+  text-align: center;
+  font-size: clamp(28px, 12vw, 58px); font-weight: 900;
+  font-family: 'Noto Serif TC', serif;
+  white-space: normal; color: #fff; opacity: 0.2;
+  letter-spacing: 0.02em; z-index: 1; pointer-events: none;
+  padding: 0 12px;
+  line-height: 1.15;
+  overflow: hidden;
+  transform-origin: center top;
+}
+
+/* Default char image */
+.res-char-img {
+  position: absolute;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  height: 290px; width: auto; object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 12px 32px rgba(0,0,0,0.55));
+}
+/* Per-character overrides */
+/* 仙草：圖高，往上移讓頭露出字後方 */
+.res-char-img.char-仙草 {
+  height: 260px;
+  bottom: 20px;
+}
+/* 潘屋：同樣往上移 */
+.res-char-img.char-潘屋 {
+  height: 275px;
+  bottom: 20px;
+}
+/* 戰鬥：縮小一點讓頭不擋字 */
+.res-char-img.char-戰鬥 {
+  height: 270px;
+  bottom: 0;
+}
+/* 柿染：維持原本 */
+.res-char-img.char-柿染 {
+  height: 290px;
+  bottom: 0;
+}
+/* 三個新角色：先用預設尺寸，待提供截圖後微調 */
+.res-char-img.char-呂順興,
+.res-char-img.char-豆腐,
+.res-char-img.char-鳳嬌客家 {
+  height: 280px;
+  bottom: 0;
+}
+
+/* Scroll content — no top margin, card overlaps hero bottom */
+.res-scroll-content {
+  position: relative; z-index: 3;
+  padding: 0 16px 0;
+  margin-top: -2px;
+}
+
+/* Glass card — same as s2-card, button straddles bottom edge */
+.res-glass-card {
+  position: relative;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.30);
+  border-radius: 18px;
+  padding: 24px 22px 52px; /* extra bottom for button overlap */
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 4px 24px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.28);
+  margin-bottom: 0;
+}
+.res-card-animate {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.res-card-animate.visible { opacity: 1; transform: translateY(0); }
+
+/* Button overlapping the card bottom */
+.res-btn-wrap {
+  display: flex; justify-content: center;
+  margin-top: -24px; /* pull up to straddle card bottom edge */
+  padding-bottom: 44px;
+  position: relative; z-index: 5;
+}
+
+.res-card-title {
+  font-size: 28px; font-weight: 900;
+  font-family: 'Noto Serif TC', serif;
+  color: #fff; margin-bottom: 4px; line-height: 1.2;
+}
+.res-card-subtitle {
+  font-size: 14px; font-weight: 400;
+  font-family: 'Noto Serif TC', serif;
+  color: #fff; margin-bottom: 16px;
+}
+.res-card-header { margin-bottom: 0; }
+
+/* Radar */
+.radar-wrap {
+  position: relative; width: 280px; height: 270px;
+  margin: 0 auto;
+}
+#radarCanvas {
+  display: block; position: absolute; top: 0; left: 0;
+}
+.radar-label-pos {
+  position: absolute;
+  font-size: 10.5px; font-family: 'Noto Serif TC', serif;
+  font-weight: 400;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.res-section-title {
+  font-size: 16px; font-weight: 900;
+  font-family: 'Noto Serif TC', serif;
+  color: #fff; margin: 20px 0 12px;
+}
+/* indent everything under section titles */
+
+.res-trait-line {
+  font-size: 13px; font-weight: 400;
+  font-family: 'Noto Serif TC', serif;
+  line-height: 1.85; margin-bottom: 10px;
+  padding-left: 12px;
+}
+.res-trait-key { font-weight: 900; color: #fff; }
+.res-desc-text {
+  font-size: 13px; font-weight: 400;
+  font-family: 'Noto Serif TC', serif;
+  line-height: 2; text-indent: 2em;
+  padding-left: 4px;
+}
+
+.res-buddy-section-title {
+  font-size: 16px; font-weight: 900;
+  font-family: 'Noto Serif TC', serif;
+  color: #fff; margin: 20px 0 14px;
+}
+/* indent buddy content under title */
+.res-buddy-indent {
+  padding-left: 12px;
+}
+.res-buddy-row { display: flex; gap: 16px; padding-left: 12px; }
+.res-buddy-col {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+}
+.res-buddy-label {
+  font-size: 12px; font-weight: 400;
+  font-family: 'Noto Serif TC', serif;
+  margin-bottom: 8px; align-self: flex-start;
+}
+.res-buddy-img {
+  width: 90px; height: 120px; object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+.res-buddy-name {
+  font-size: 11px; font-weight: 400;
+  font-family: 'Noto Serif TC', serif;
+  color: #fff; margin-top: 6px; text-align: center;
+}
+
+/* Restart btn */
+.res-restart-btn {
+  padding: 14px 52px; border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.85);
+  cursor: pointer;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 15px; font-weight: 700;
+  color: #514242;
+  transition: transform 0.13s, box-shadow 0.13s;
+  letter-spacing: 0.05em;
+  position: relative; overflow: hidden; isolation: isolate;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.res-restart-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, transparent 50%);
+  border-radius: 50px; pointer-events: none; z-index: -1;
+}
+.res-restart-btn:hover { transform: scale(1.05); }
+.res-restart-btn:active { transform: scale(0.96); }
+
+/* ── 長按提示 ── */
+.long-press-hint {
+  text-align: center;
+  font-size: 11px; font-family: 'Noto Serif TC', serif;
+  color: rgba(255,255,255,0.35);
+  padding: 10px 0 0;
+  letter-spacing: 0.06em;
+  animation: hintBlink 2.5s ease-in-out infinite;
+}
+
+/* ── 下載結果文字連結 ── */
+.res-download-link {
+  text-align: center;
+  font-size: 13px; font-family: 'Noto Serif TC', serif;
+  font-weight: 700;
+  padding: 12px 0 36px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s, transform 0.12s;
+}
+.res-download-link:hover { opacity: 0.75; }
+.res-download-link:active { transform: scale(0.97); }
+.res-download-link.downloading { opacity: 0.5; pointer-events: none; }
+
+/* ── 分享燈箱 overlay ── */
+#shareOverlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.82);
+  flex-direction: column;
+  align-items: center;
+}
+#shareOverlay.show { display: flex; }
+
+/* 燈箱容器：上方可滾動卡片，底部固定按鈕 */
+.share-lightbox {
+  display: flex; flex-direction: column;
+  align-items: center;
+  width: min(360px, 90vw);
+  height: 100%;
+  max-height: 100vh;
+  padding: 0;
+  position: relative;
+}
+.share-lightbox-title {
+  font-size: 12px; color: rgba(255,255,255,0.45);
+  font-family: 'Noto Serif TC', serif;
+  letter-spacing: 0.06em;
+  padding: 14px 0 10px;
+  flex-shrink: 0;
+}
+/* 卡片滾動區 */
+.share-card-scroll {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+#shareCard {
+  width: 100%;
+  position: relative;
+  display: block;
+}
+#shareCard canvas {
+  display: block; width: 100% !important; height: auto !important;
+}
+/* 底部按鈕列：固定在燈箱底部 */
+.share-actions {
+  display: flex; gap: 8px;
+  width: 100%;
+  padding: 12px 0 20px;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(12px);
+}
+.share-act-btn {
+  flex: 1; padding: 11px 6px; border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.10);
+  color: #fff; font-family: 'Noto Serif TC', serif;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.15s, transform 0.12s;
+  text-align: center;
+}
+.share-act-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.03); }
+.share-act-btn.primary {
+  background: rgba(255,255,255,0.9); color: #18191B;
+}
+.share-act-btn.primary:hover { background: #fff; }
+.share-act-btn.ig {
+  border-color: rgba(255,255,255,0.4);
+  font-weight: 700;
+}
+.share-act-btn.ig:hover { filter: brightness(1.1); transform: scale(1.03); }
+
+/* ── Admin Panel (隱藏，快捷鍵 Ctrl+Shift+A 開啟) ── */
+
+#adminPanel {
+  display: none;
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(10,10,12,0.96);
+  flex-direction: column;
+  font-family: 'Noto Serif TC', serif;
+}
+#adminPanel.show { display: flex; }
+
+.admin-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  color: #fff; font-size: 16px; font-weight: 700;
+  flex-shrink: 0;
+}
+.admin-close {
+  background: none; border: none; color: rgba(255,255,255,0.6);
+  font-size: 18px; cursor: pointer;
+}
+.admin-close:hover { color: #fff; }
+
+.admin-body {
+  flex: 1; overflow-y: auto;
+  padding: 16px 18px 32px;
+}
+
+.admin-group-title {
+  font-size: 12px; color: rgba(255,255,255,0.4);
+  margin: 18px 0 10px; letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.admin-group-title:first-child { margin-top: 0; }
+
+.admin-btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.admin-btn-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+}
+.admin-btn-col { display: flex; flex-direction: column; gap: 8px; }
+
+.admin-btn {
+  padding: 10px 8px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
+  font-family: 'Noto Serif TC', serif;
+  font-size: 12.5px; font-weight: 500; cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.admin-btn:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.35); }
+.admin-btn:active { transform: scale(0.96); }
+
+.admin-result-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  font-family: 'Noto Serif TC', serif;
+  transition: background 0.15s, border-color 0.15s;
+}
+.admin-result-btn:hover { background: rgba(255,255,255,0.12); }
+.admin-result-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.admin-result-label { color: #fff; font-size: 13px; font-weight: 700; }
+.admin-result-sub { color: rgba(255,255,255,0.45); font-size: 10.5px; margin-left: auto; }
+
+
+
+/* ── Fade transition ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+.fade-in  { animation: fadeIn  0.4s cubic-bezier(0.4,0,0.2,1) forwards; }
+.fade-out { animation: fadeOut 0.3s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+/* page-slide transition */
+.quiz-wrap {
+  display: flex; flex-direction: column; flex: 1;
+}
+
+/* ── Shared screen base ── */
+.screen-base {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  flex: 1;
+  align-items: stretch;
+}
+
+/* ── Start screen 1 ── */
+#startScreen1 {
+  align-items: center; justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+.s1-logo {
+  width: 280px; margin-bottom: 18px;
+  filter: drop-shadow(0 0 18px rgba(255,85,215,0.6));
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+@keyframes logoGlow {
+  0%   { filter: drop-shadow(0 0 14px rgba(255,85,215,0.5)); }
+  100% { filter: drop-shadow(0 0 28px rgba(255,85,215,0.85)) drop-shadow(0 0 50px rgba(255,120,200,0.4)); }
+}
+.s1-star {
+  width: 36px; height: 36px; margin-bottom: 22px;
+  animation: sparklePulse 2.8s ease-in-out infinite;
+}
+.s1-star svg { width: 100%; height: 100%; overflow: visible; }
+.s1-title {
+  font-size: 22px; font-weight: 900; color: #fff;
+  line-height: 1.45; margin-bottom: 16px;
+  font-family: 'Noto Serif TC', serif;
+  text-shadow: 0 0 16px rgba(255,255,255,0.25);
+}
+.s1-desc {
+  font-size: 13px; color: #FFB5E3; line-height: 1.9;
+  margin-bottom: 0; font-family: 'Noto Serif TC', serif;
+  max-width: 270px;
+}
+.s1-hint {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  font-size: 11.5px; color: rgba(255,255,255,0.55);
+  font-family: 'Noto Serif TC', serif; letter-spacing: 0.08em;
+  white-space: nowrap;
+  animation: hintBlink 2.2s ease-in-out infinite;
+}
+@keyframes hintBlink {
+  0%,100% { opacity: 0.4; }
+  50%      { opacity: 0.9; }
+}
+
+/* ── Start screen 2 ── */
+#startScreen2 {
+  justify-content: flex-start;
+}
+.s2-logo {
+  width: 250px; margin: 0 auto 10px;
+  filter: drop-shadow(0 0 16px rgba(255,85,215,0.55));
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+.s2-star-wrap {
+  display: flex; justify-content: center;
+  margin-bottom: 14px;
+}
+.s2-star {
+  width: 32px; height: 32px;
+  animation: sparklePulse 2.8s ease-in-out infinite;
+}
+.s2-star svg { width: 100%; height: 100%; overflow: visible; }
+
+.s2-card {
+  margin: 0 18px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.30);
+  border-radius: 18px;
+  padding: 24px 22px 30px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 4px 24px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.28);
+}
+.s2-card-title {
+  font-size: 17px; font-weight: 900; color: #fff;
+  margin-bottom: 14px; font-family: 'Noto Serif TC', serif;
+  text-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+.s2-card-body {
+  font-size: 13px; color: #FFB5E3; line-height: 1.9;
+  font-family: 'Noto Serif TC', serif; margin-bottom: 14px;
+  text-indent: 2em;
+}
+.s2-card-cta {
+  font-size: 13px; color: #fff; line-height: 1.9;
+  font-family: 'Noto Serif TC', serif;
+}
+.s2-card-cta span {
+  color: #FF66C4; text-decoration: underline; text-underline-offset: 3px;
+}
+.s2-nav {
+  display: flex; justify-content: center;
+  padding: 20px 0 32px;
+}
+.s2-arrow {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08);
+  color: #fff; font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(6px);
+  transition: background 0.15s, transform 0.12s;
+}
+.s2-arrow:hover { background: rgba(255,255,255,0.18); transform: scale(1.08); }
+.s2-arrow:active { transform: scale(0.93); }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="orb orb-l"></div>
+  <div class="orb orb-r"></div>
+
+  <!-- START SCREEN 1 — 點擊任意處進入第二頁 -->
+  <div id="startScreen1" class="screen-base" onclick="showStart2()" style="cursor:pointer; text-align:center;">
+    <div class="header" style="width:100%; align-self:stretch;">
+      <span class="hd-l">新理測驗x新埔女路</span>
+      <span class="hd-r">Her Story of XinPu</span>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 0 30px 60px;">
+      <img src="Xinpu_logo.png" alt="新理測驗" class="s1-logo">
+      <div class="s1-star">
+        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 4 L33 27 L56 30 L33 33 L30 56 L27 33 L4 30 L27 27 Z"
+            fill="none" stroke="#ff80c0" stroke-width="2"
+            style="filter:drop-shadow(0 0 6px #ff60b0) drop-shadow(0 0 14px #ee40a0)"/>
+          <path d="M30 4 L33 27 L56 30 L33 33 L30 56 L27 33 L4 30 L27 27 Z" fill="rgba(255,160,210,0.18)"/>
+        </svg>
+      </div>
+      <div class="s1-title">你/妳是哪一種新埔女路？</div>
+      <div class="s1-desc">透過15道生活情境題，<br>找出與你/妳靈魂共鳴的新埔景點，<br>解鎖屬於你/妳女路故事。</div>
+    </div>
+    <div class="s1-hint">輕觸畫面開始測驗</div>
+  </div>
+
+  <!-- START SCREEN 2 — 介紹頁 -->
+  <div id="startScreen2" class="screen-base" style="display:none;">
+    <div class="header">
+      <span class="hd-l">新理測驗：新埔女路</span>
+      <span class="hd-r">Her Story of XinPu</span>
+    </div>
+    <div style="display:flex; flex-direction:column; flex:1; padding-top:16px;">
+      <img src="Xinpu_logo.png" alt="新理測驗" class="s2-logo">
+      <div class="s2-star-wrap">
+        <div class="s2-star">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M30 4 L33 27 L56 30 L33 33 L30 56 L27 33 L4 30 L27 27 Z"
+              fill="none" stroke="#ff80c0" stroke-width="2"
+              style="filter:drop-shadow(0 0 6px #ff60b0) drop-shadow(0 0 14px #ee40a0)"/>
+            <path d="M30 4 L33 27 L56 30 L33 33 L30 56 L27 33 L4 30 L27 27 Z" fill="rgba(255,160,210,0.18)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="s2-card">
+        <div class="s2-card-title">什麼是新埔女路？</div>
+        <div class="s2-card-body">這是一條以女性歷史與生命經驗為核心的文化路徑。在新埔這座客家小鎮裡，女性的「硬頸精神」化為柔韌的力量——她們在有限的邊界中突圍、在家族大局間優雅掌舵、用時間慢熬出溫潤，並在風雨淬鍊後綻放色彩。</div>
+        <div class="s2-card-cta"><span>在無數個「不得不」的日常裡，妳也在尋找自己的光亮嗎？</span><br>快來解鎖屬於妳的新埔美少女吧！</div>
+      </div>
+      <div class="s2-nav">
+        <button class="s2-arrow" onclick="goStartQuiz()">&#8594;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-wrap" id="quizWrap" style="display:none;">
+    <div class="header">
+      <span class="hd-l">新理測驗：新埔女路</span>
+      <span class="hd-r">Her Story of XinPu</span>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-track">
+        <div class="prog-fill" id="progFill" style="width:0%"></div>
+        <div class="prog-star" id="progStar" style="left:2%">
+          <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="12,2 13.9,8.6 20.8,8.6 15.2,12.7 17.1,19.3 12,15.2 6.9,19.3 8.8,12.7 3.2,8.6 10.1,8.6" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="q-card">
+      <div class="q-num" id="qNum">Q1.</div>
+      <div class="q-txt" id="qTxt"></div>
+      <div class="sparkle">
+        <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 4 L33 27 L56 30 L33 33 L30 56 L27 33 L4 30 L27 27 Z"
+            fill="none" stroke="#ff80c0" stroke-width="2"
+            style="filter:drop-shadow(0 0 6px #ff60b0) drop-shadow(0 0 14px #ee40a0)"/>
+          <path d="M30 4 L33 27 L56 30 L33 33 L30 56 L27 33 L4 30 L27 27 Z"
+            fill="rgba(255,160,210,0.15)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="opts" id="opts"></div>
+    <div class="nav">
+      <button class="nav-btn hide" id="btnPrev" onclick="go(-1)">&#8592;</button>
+      <div></div>
+      <button class="nav-btn hide" id="btnNext" onclick="go(1)">&#8594;</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result" style="display:none; position:relative; z-index:2; flex:1; flex-direction:column; overflow-y:auto; overflow-x:hidden; background:#18191B;">
+
+    <!-- 4 background orbs -->
+    <div class="res-page-bg" id="resPageBg">
+      <div class="res-orb res-orb-1" id="resOrb1"></div>
+      <div class="res-orb res-orb-2" id="resOrb2"></div>
+      <div class="res-orb res-orb-3" id="resOrb3"></div>
+      <div class="res-orb res-orb-4" id="resOrb4"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header" style="position:relative; z-index:10;">
+      <span class="hd-l" id="resHdL">新理測驗：新埔女路</span>
+      <span class="hd-r" id="resHdR">Her Story of XinPu</span>
+    </div>
+
+    <!-- Hero zone -->
+    <div class="res-hero-zone">
+      <div class="res-bg-title" id="resBgTitle"></div>
+      <img id="resCharImg" src="" alt="" class="res-char-img">
+    </div>
+
+    <!-- Scrollable card content -->
+    <div class="res-scroll-content" id="resScrollContent">
+      <div class="res-glass-card res-card-animate" id="resCard">
+
+        <div class="res-card-header">
+          <div class="res-card-title" id="resCardTitle"></div>
+          <div class="res-card-subtitle" id="resCardSubtitle"></div>
+        </div>
+
+        <div class="radar-wrap" id="radarWrap">
+          <canvas id="radarCanvas" width="280" height="270"></canvas>
+        </div>
+
+        <div class="res-section-title">靈魂核心特質：</div>
+        <div id="resTraitsNew"></div>
+
+        <div class="res-section-title">關於這個景點：</div>
+        <div class="res-desc-text" id="resDescNew"></div>
+
+        <div class="res-buddy-section-title">美少女連線：</div>
+        <div class="res-buddy-row">
+          <div class="res-buddy-col">
+            <div class="res-buddy-label" id="buddyLabel1">合拍美少女：</div>
+            <img id="buddyImg1" src="" class="res-buddy-img" alt="">
+            <div class="res-buddy-name" id="buddyName1"></div>
+          </div>
+          <div class="res-buddy-col">
+            <div class="res-buddy-label" id="buddyLabel2">衝突美少女：</div>
+            <img id="buddyImg2" src="" class="res-buddy-img" alt="">
+            <div class="res-buddy-name" id="buddyName2"></div>
+          </div>
+        </div>
+
+      </div><!-- end glass card -->
+
+      <!-- Button straddles card bottom -->
+      <div class="res-btn-wrap">
+        <button class="res-restart-btn" id="resRestartBtn" onclick="restart()">再測一次</button>
+      </div>
+      <div class="res-download-link" id="resDownloadLink" onclick="quickDownload()">(按此以下載結果)</div>
+    </div>
+  </div>
+
+  <!-- ── 分享燈箱 Overlay ── -->
+  <div id="shareOverlay" onclick="closeShare(event)">
+    <div class="share-lightbox" onclick="event.stopPropagation()">
+      <div class="share-lightbox-title">點擊空白處關閉 · 下載後可分享限動</div>
+      <div class="share-card-scroll">
+        <div id="shareCard"><!-- canvas rendered by JS --></div>
+      </div>
+      <div class="share-actions">
+        <button class="share-act-btn" onclick="closeShareBtn()">關閉</button>
+        <button class="share-act-btn primary" id="downloadBtn" onclick="downloadCard()">下載圖片</button>
+        <button class="share-act-btn ig" onclick="shareToIG()">分享限動</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 開發者後台已隱藏，使用快捷鍵 Ctrl+Shift+A 開啟 -->
+  <div id="adminPanel">
+    <div class="admin-header">
+      <span>頁面檢視後台</span>
+      <button class="admin-close" onclick="toggleAdmin()">✕</button>
+    </div>
+    <div class="admin-body">
+
+      <div class="admin-group-title">開場頁面</div>
+      <div class="admin-btn-row">
+        <button class="admin-btn" onclick="adminGoStart1()">頁面 1</button>
+        <button class="admin-btn" onclick="adminGoStart2()">頁面 2</button>
+      </div>
+
+      <div class="admin-group-title">測驗題目（共 15 題）</div>
+      <div class="admin-btn-grid" id="adminQList"></div>
+
+      <div class="admin-group-title">結果頁面（7 種角色）</div>
+      <div class="admin-btn-col" id="adminResultList"></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 全部題目資料（景點對應）──
+const ALL_QS = [
+  {
+    q: "下班前一刻主管又硬塞工作給妳，妳的第一直覺反應？",
+    opts: [
+      { text: "將這視為大顯身手的考驗，用實力驚艷所有人。",       type: "柿染坊" },
+      { text: "算了，為了團隊和諧還是吞下去默默做完。",           type: "潘屋"   },
+      { text: "不合理！明確拒絕或要求重新排程。",                 type: "戰鬥巷" },
+      { text: "保持心靈純粹，用最柔軟但有原則的態度包容並化解。", type: "豆腐店" }
+    ]
+  },
+  {
+    q: "當妳心懷期待的「夢想」與家人的期待發生衝突時，妳會？",
+    opts: [
+      { text: "理性溝通，找出能兼顧兩者的折衷方案。",                         type: "潘屋"   },
+      { text: "不急不躁、堅持初心，默默守著自己認可的價值做到最好。",         type: "鳳嬌"   },
+      { text: "溫和應對，像熬湯一樣用時間慢慢融化對方。",                     type: "仙草窩" },
+      { text: "自帶拿捏分寸的智慧，體貼而不討好，把複雜的關係烘焙得剛剛好。", type: "餅舖"   }
+    ]
+  },
+  {
+    q: "看著身邊的人陸續成家、升遷，深夜感到焦慮時妳會？",
+    opts: [
+      { text: "泡杯熱茶，允許自己今晚躺平。每個人花期不同。",         type: "仙草窩" },
+      { text: "「關我屁事！」去大運動或大掃除發洩焦慮。",             type: "戰鬥巷" },
+      { text: "把焦慮寫成日記或化為創作，當作自我提升的養分。",       type: "柿染坊" },
+      { text: "退回內心純淨的角落，告訴自己保持初心、不隨波逐流。",   type: "豆腐店" }
+    ]
+  },
+  {
+    q: "面臨嚴重的挫折（如失戀或被朋友背叛），妳如何面對傷痛？",
+    opts: [
+      { text: "腳踏實地，用日常的忙碌和美食來好好滋養、治癒自己。",     type: "鳳嬌"   },
+      { text: "痛快大哭一場，然後拍拍灰塵迅速爬起來檢討。",             type: "戰鬥巷" },
+      { text: "雖然內心受傷，但懂得把生活的苦澀，烘烤成剛剛好的甘甜。", type: "餅舖"   },
+      { text: "暫時與世界關機，吃頓熱飯、睡個飽覺來療癒自我。",         type: "仙草窩" }
+    ]
+  },
+  {
+    q: "妳最嚮往哪一種理想的生活狀態？",
+    opts: [
+      { text: "活得淋漓盡致、愛恨分明，有能力保護愛的人。",       type: "戰鬥巷" },
+      { text: "雖然外表溫和，但內心擁有不可動搖的純粹與原則。",   type: "豆腐店" },
+      { text: "持續探索未知，在體驗中創造獨一無二的自己。",       type: "柿染坊" },
+      { text: "內外兼顧，優雅地掌握整個人生主導權。",             type: "潘屋"   }
+    ]
+  },
+  {
+    q: "朋友聚會時聊到一個新興的賺錢或自我投資機會，妳的第一反應是？",
+    opts: [
+      { text: "冷靜評估風險與報酬率，並思考這是否符合我的長期規劃。",     type: "潘屋"   },
+      { text: "踏實穩健地經營手頭現有的事，不輕易隨外界風向動搖。",       type: "鳳嬌"   },
+      { text: "對裡面帶有美感或創新概念的部分特別感興趣，想用自己的方式玩玩看。", type: "柿染坊" },
+      { text: "自帶復古務實的直覺，冷靜觀察、拿捏分寸，不盲目跟風。",     type: "餅舖"   }
+    ]
+  },
+  {
+    q: "偶然聽到不熟的人在背後對妳指指點點、誤解妳，妳會怎麼做？",
+    opts: [
+      { text: "心裡有點小受傷，但回家吃個美食、跟好姐妹訴苦完就放寬心了。", type: "仙草窩" },
+      { text: "隨他們去說，只要不踩到我的核心底線，我依然保持純潔乾淨。", type: "豆腐店" },
+      { text: "直接走過去當面直球對決，講清楚說明白，不容許被抹黑。",     type: "戰鬥巷" },
+      { text: "成熟冷靜地面對。只要不影響大局和權益，時間會證明一切。",   type: "潘屋"   }
+    ]
+  },
+  {
+    q: "當妳感覺到生活陷入「一成不變的瓶頸期」時，妳通常會怎麼打破僵局？",
+    opts: [
+      { text: "去發掘新的興趣、看展覽，找尋能刺激靈感與美感的新事物。",   type: "柿染坊" },
+      { text: "專注於雙手能掌控的日常手藝或廚藝，用手作的專注療癒瓶頸。", type: "鳳嬌"   },
+      { text: "放慢腳步，去大自然走走、爬爬山，讓心靈先充飽電再說。",     type: "仙草窩" },
+      { text: "主動打破舒適圈！去挑戰一個以前從不敢做的極限嘗試。",       type: "戰鬥巷" }
+    ]
+  },
+  {
+    q: "如果有一筆預算可以犒賞自己，妳最傾向買下什麼？",
+    opts: [
+      { text: "能帶來速度感或效率的科技潮玩，或是報名格鬥、極限運動課。", type: "戰鬥巷" },
+      { text: "購買無添加、最純粹天然的高級有機保養品或香氛。",           type: "豆腐店" },
+      { text: "經典保值、出席重要場合能襯托身分與氣質的精品配件。",       type: "潘屋"   },
+      { text: "具有文化底蘊與復古溫暖魅力、值得收藏的手作老件或好餅。",   type: "餅舖"   }
+    ]
+  },
+  {
+    q: "在一個大型的社交聚會中，妳通常扮演什麼角色？",
+    opts: [
+      { text: "舉止得體的優雅公關，能照顧到全場每個人，社交手腕遊刃有餘。",     type: "潘屋" },
+      { text: "熱情款待大家、默默為所有人準備點心或張羅食物的溫暖照顧者。",     type: "鳳嬌" },
+      { text: "默默在角落吃美食的安靜觀察者，對妳來說舒服、不社交最自得。",     type: "仙草窩" },
+      { text: "穿搭非常有個人特色，常吸引頻率相同的人主動前來搭訕攀談。",       type: "柿染坊" }
+    ]
+  },
+  {
+    q: "每到歲末年終或是換季時，妳通常會怎麼進行大掃除？",
+    opts: [
+      { text: "分類明確、井然有序，有些充滿回憶或有價值的東西會妥善傳承收納。", type: "潘屋" },
+      { text: "拿出斷捨離的狠勁，效率極高、說丟就丟，絕不留戀。",               type: "戰鬥巷" },
+      { text: "把家裡打掃到一塵不染，極度追求視覺與心靈上的潔淨與純粹。",       type: "豆腐店" },
+      { text: "自帶條理，懂得在斷捨離中拿捏分寸，把舊回憶與新生活平衡得剛剛好。", type: "餅舖" }
+    ]
+  },
+  {
+    q: "當妳身邊最親近的人遇到挫折、陷入低潮向妳求助時，妳通常扮演什麼角色？",
+    opts: [
+      { text: "溫暖的避風港。不說大道理，只是靜靜陪伴、做一頓熱飯給他吃。",     type: "仙草窩" },
+      { text: "親手做一份熱騰騰的傳統點心，用最樸實、飽足的溫暖餵飽他的心。",   type: "鳳嬌" },
+      { text: "靈魂引導者。用自己的生命經驗或故事開導他，陪他看見風雨後的轉機。", type: "柿染坊" },
+      { text: "理性的傾聽者。安撫情緒後，幫他理出頭緒，給予最沉穩客觀的建議。",   type: "潘屋" }
+    ]
+  },
+  {
+    q: "關於「旅行」，妳最嚮往哪一種規劃與體驗風格？",
+    opts: [
+      { text: "行前做足功課，把交通、住宿、餐廳都安排得精準無誤的深度文化之旅。", type: "潘屋" },
+      { text: "說走就走的冒險！行程充滿未知與挑戰，體驗當地最狂野的玩法。",       type: "戰鬥巷" },
+      { text: "前往水質澄澈、空氣乾淨的世外桃源，洗滌心靈的純淨之旅。",           type: "豆腐店" },
+      { text: "尋訪傳承百年的老街老店，體驗最有歲月人情味與煙火氣的復古巡禮。",   type: "餅舖" }
+    ]
+  },
+  {
+    q: "當生活、工作多頭燒，壓力大到臨界點時，妳的身體通常會發出什麼訊號？",
+    opts: [
+      { text: "感到深深的虛無感與自我懷疑，陷入精神內耗、提不起勁。",         type: "柿染坊" },
+      { text: "胃痛、暴飲暴食或完全沒食慾，整個腸胃系統開始抗議。",           type: "仙草窩" },
+      { text: "因為凡事親力親為、過度勞碌，導致嚴重的肌肉酸痛與體力透支。",   type: "鳳嬌"   },
+      { text: "變得非常易怒、心跳加快，隨時處於準備跟人開戰的緊繃狀態。",     type: "戰鬥巷" }
+    ]
+  },
+  {
+    q: "如果妳有機會學習一項新的手藝或技能，妳最想嘗試哪一種？",
+    opts: [
+      { text: "傳承古法，學習如何製作傳統米食或漢方養生膳食。",               type: "鳳嬌"   },
+      { text: "學習傳統手工豆腐或古法釀造，體會與天然純淨食材對話的平靜。",   type: "豆腐店" },
+      { text: "烘焙百年古法糕餅，學會如何在多變的火候中烤出甘甜滋味。",       type: "餅舖"   },
+      { text: "草木染、陶藝或金工手作，親手將天然材料淬鍊成充滿溫度的藝術品。", type: "柿染坊" }
+    ]
+  }
+];
+
+// ── 結果資料 ──
+const RESULTS = {
+  "柿染坊": {
+    type: "新埔柿染坊",
+    tagline: "風雨後更顯美麗的藝術家",
+    img: "柿染.png",
+    headerColor: "#FF9E66",
+    accentColor: "#FFD1AE",  // text accent
+    // 4 orbs: [bg1, bg2, bg3, bg4]
+    orbs: [
+      "radial-gradient(ellipse at center, rgba(255,118,43,0.55) 0%, rgba(255,191,87,0.28) 45%, rgba(255,230,71,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(255,158,85,0.5) 0%, rgba(255,207,179,0.25) 45%, rgba(255,220,124,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(255,118,43,0.48) 0%, rgba(255,191,87,0.24) 45%, rgba(255,230,71,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(255,158,85,0.45) 0%, rgba(255,207,179,0.22) 45%, rgba(255,220,124,0) 80%)"
+    ],
+    radar: [62, 45, 88, 58, 40], // 突圍行動力 自我核心感 逆境轉化率 溫潤療癒力 大局理智度
+    traits: ["美感敏銳","思想深邃","進化蛻變"],
+    traitsFull: [
+      { key: "核心特質：", val: "強大轉化力、充滿美感、耐得住考驗" },
+      { key: "優點：",     val: "能把生活中的挫折與傷痛，淬鍊成生命的養分，活出極具深度的個人美學。" },
+      { key: "隱性盲點：", val: "在色彩尚未完全顯現的「熟成期」容易陷入嚴重的自我懷疑與內耗。請相信暴曬過後的妳，會更亮眼。" }
+    ],
+    desc: "天然柿汁在九降風與烈日繁複曝曬下，才會淬鍊出最美麗耐洗的色澤。這就如同妳細膩且深邃的靈魂，雖然容易沉浸在自我探索的內耗中，卻能在痛苦的歲月洗禮後驚艷綻放。",
+    buddy:    { name: "戰鬥巷",       img: "戰鬥.png" },
+    conflict: { name: "呂順興餅舖",   img: "鳳嬌客家.png" },
+    radarColor: "#FF9E66",
+    btnGradient: "radial-gradient(ellipse at center, #ffffff 0%, #ffd4a8 45%, #FF9E66 100%)"
+  },
+  "仙草窩": {
+    type: "大鍋仔仙草窩",
+    tagline: "溫塊療癒的慢活守護者",
+    img: "仙草.png",
+    headerColor: "#4DCB7A",
+    accentColor: "#AEFFE4",
+    orbs: [
+      "radial-gradient(ellipse at center, rgba(68,129,92,0.55) 0%, rgba(161,237,167,0.28) 45%, rgba(228,255,237,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(69,240,115,0.5) 0%, rgba(208,255,234,0.25) 45%, rgba(207,255,218,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(68,129,92,0.48) 0%, rgba(161,237,167,0.24) 45%, rgba(228,255,237,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(69,240,115,0.45) 0%, rgba(208,255,234,0.22) 45%, rgba(207,255,218,0) 80%)"
+    ],
+    radar: [28, 42, 50, 90, 48],
+    traits: ["溫和無害","隨遇而安","慢活哲學"],
+    traitsFull: [
+      { key: "核心特質：", val: "溫潤、善於傾聽、自帶慢靈魂" },
+      { key: "優點：",     val: "讓人放鬆的天然氣場，總能默默療癒他人，是大家心中最安全的避風港。" },
+      { key: "隱性盲點：", val: "容易不自覺吸收身邊親友的負能量，忘了為自己補充能量。" }
+    ],
+    desc: "新埔黑金仙草，需經大鍋文火慢熬數小時，才釋放出最甘甜的膠質。那份融化在煙火氣裡的溫熱，象徵妳自帶隨遇而安的慢活哲學，允許自己躺平，卻能默默撫平所有疲憊。",
+    buddy:    { name: "戰鬥巷",       img: "戰鬥.png" },
+    conflict: { name: "新埔潘屋",     img: "潘屋.png" },
+    radarColor: "#4DCB7A",
+    btnGradient: "radial-gradient(ellipse at center, #ffffff 0%, #b8ffd8 45%, #4DCB7A 100%)"
+  },
+  "潘屋": {
+    type: "新埔潘屋",
+    tagline: "優雅且堅定的命運掌舵者",
+    img: "潘屋.png",
+    headerColor: "#6B91D8",
+    accentColor: "#AED9FF",
+    orbs: [
+      "radial-gradient(ellipse at center, rgba(68,94,129,0.55) 0%, rgba(161,214,255,0.28) 45%, rgba(228,241,255,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(69,129,240,0.5) 0%, rgba(208,228,255,0.25) 45%, rgba(207,228,255,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(68,94,129,0.48) 0%, rgba(161,214,255,0.24) 45%, rgba(228,241,255,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(69,129,240,0.45) 0%, rgba(208,228,255,0.22) 45%, rgba(207,228,255,0) 80%)"
+    ],
+    radar: [38, 80, 62, 50, 92],
+    traits: ["大局觀強","進退有度","極致秩序"],
+    traitsFull: [
+      { key: "核心特質：", val: "高EQ、顧全大局、成熟理智" },
+      { key: "優點：",     val: "在生活與家庭之間，能維持最優雅的平衡，是眾人心目中最可靠的掌舵者。" },
+      { key: "隱性盲點：", val: "顧慮太多人，反而把自己的渴望排到最後，請別忘了妳也值得被好好照顧。" }
+    ],
+    desc: "兩百年歷史的潘屋古厝，以開闊的大全景設計展現嚴謹的大局觀。這份大器底蘊，如同妳性格中與生俱來的沉穩與理智，懂得站在高處看事情，優雅掌舵人生的主導權。",
+    buddy:    { name: "錦興豆腐店",   img: "豆腐.png" },
+    conflict: { name: "大鍋仔仙草窩", img: "仙草.png" },
+    radarColor: "#6B91D8",
+    btnGradient: "radial-gradient(ellipse at center, #ffffff 0%, #b8d8ff 45%, #6B91D8 100%)"
+  },
+  "戰鬥巷": {
+    type: "戰鬥巷",
+    tagline: "守護邊界的堅韌女戰士",
+    img: "戰鬥.png",
+    headerColor: "#FF4299",
+    accentColor: "#FFAED9",
+    orbs: [
+      "radial-gradient(ellipse at center, rgba(129,68,91,0.55) 0%, rgba(255,161,206,0.28) 45%, rgba(255,228,236,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(240,69,166,0.5) 0%, rgba(255,208,238,0.25) 45%, rgba(255,207,238,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(129,68,91,0.48) 0%, rgba(255,161,206,0.24) 45%, rgba(255,228,236,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(240,69,166,0.45) 0%, rgba(255,208,238,0.22) 45%, rgba(255,207,238,0) 80%)"
+    ],
+    radar: [92, 65, 55, 30, 45],
+    traits: ["效率至上","護短到底","愛恨分明"],
+    traitsFull: [
+      { key: "核心特質：", val: "界線分明、行動力" },
+      { key: "優點：",     val: "不向不合理妥協，主動守護愛的人，是衝突現場最勇敢站出來的那一個。" },
+      { key: "隱性盲點：", val: "習慣自己撐，常常忘了示弱。讓別人有機會照顧妳，也是一種勇氣。" }
+    ],
+    desc: "戰鬥巷是新埔防禦外敵的歷史弄巷。在動盪年代，是在地女性保護家園的隱密防線。那份在受限環境中勇敢突圍的韌性，象徵妳愛恨分明、極具行動力且果斷的強大保護欲。",
+    buddy:    { name: "新埔柿染坊",   img: "柿染.png" },
+    conflict: { name: "鳳嬌客家傳統米食", img: "呂順興.png" },
+    radarColor: "#FF4299",
+    btnGradient: "radial-gradient(ellipse at center, #ffffff 0%, #ffb8d8 45%, #FF4299 100%)"
+  },
+  "鳳嬌": {
+    type: "鳳嬌客家傳統米食",
+    titleBreak: "鳳嬌客家<br>傳統米食",
+    tagline: "專注日常與傳承的甜美滋養者",
+    img: "鳳嬌客家.png",
+    headerColor: "#F0EA45",
+    accentColor: "#FBFFAE",
+    orbs: [
+      "radial-gradient(ellipse at center, rgba(240,234,69,0.55) 0%, rgba(251,255,208,0.28) 45%, rgba(255,248,252,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(254,255,207,0.5) 0%, rgba(255,248,252,0.25) 45%, rgba(254,255,207,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(115,129,68,0.5) 0%, rgba(233,237,161,0.26) 45%, rgba(255,249,161,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(255,249,161,0.45) 0%, rgba(255,228,236,0.22) 45%, rgba(255,228,236,0) 80%)"
+    ],
+    radar: [50, 30, 65, 82, 48], // 突圍行動力 自我核心感 逆境轉化率 溫潤療癒力 大局理智度
+    traits: ["腳踏實地","雙手實踐","硬頸韌性"],
+    traitsFull: [
+      { key: "核心特質：", val: "專注純樸、踏實穩健、富有生活韌性" },
+      { key: "優點：",     val: "腳踏實地，有一種讓人無比安心的敦厚與熱情，擅長用日常的溫飽與愛，去滋養身邊所有人。" },
+      { key: "隱性盲點：", val: "有時候太過「硬頸」與堅持原則，容易讓自己陷入過度勞碌、凡事親力親為的循環中。" }
+    ],
+    desc: "客家米食凝聚了老街的踏實記憶，是女性用雙手慢慢揉捏出的專注與熱情。這份經得起咀嚼的純樸滋味，象徵妳做事腳踏實地，有著讓人無比安心的韌性，默默滋養著身邊的人。",
+    buddy:    { name: "呂順興餅舖",   img: "鳳嬌客家.png" },
+    conflict: { name: "戰鬥巷",       img: "戰鬥.png" },
+    radarColor: "#F0EA45",
+    btnGradient: "radial-gradient(ellipse at center, #ffffff 0%, #fbffd0 45%, #F0EA45 100%)"
+  },
+  "豆腐店": {
+    type: "錦興豆腐店",
+    tagline: "外柔內剛的純粹清流守護者",
+    img: "豆腐.png",
+    headerColor: "#FFF6D0",
+    accentColor: "#FFF0BE",
+    orbs: [
+      "radial-gradient(ellipse at center, rgba(255,246,208,0.5) 0%, rgba(251,255,208,0.25) 45%, rgba(255,248,252,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(255,255,255,0.45) 0%, rgba(255,248,252,0.22) 45%, rgba(255,255,255,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(147,147,132,0.45) 0%, rgba(253,255,221,0.22) 45%, rgba(255,252,209,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(255,252,209,0.4) 0%, rgba(255,255,228,0.2) 45%, rgba(255,255,228,0) 80%)"
+    ],
+    radar: [30, 85, 35, 55, 60],
+    traits: ["外柔內剛","真誠不裝","道德高標"],
+    traitsFull: [
+      { key: "核心特質：", val: "外柔內剛、潔淨真誠、極有原則" },
+      { key: "優點：",     val: "雖然外表溫和好說話，但內心對是非對錯有極高標準。在混亂的環境中，依然能保持初心。" },
+      { key: "隱性盲點：", val: "因為太過追求純粹，有時遇到不公義或複雜的人心時，容易在內心感到挫折、默默受傷。" }
+    ],
+    desc: "百年老店遵循古法與澄澈水質，壓製出柔軟卻質地緊密的豆腐。這完美詮釋了妳外柔內剛的性格，妳待人真誠、不愛虛偽客套，內心深處對是非黑白有著不可動搖的潔淨原則。",
+    buddy:    { name: "新埔潘屋",     img: "潘屋.png" },
+    conflict: { name: "新埔柿染坊",   img: "柿染.png" },
+    radarColor: "#FFF6D0",
+    btnGradient: "radial-gradient(ellipse at center, #ffffff 0%, #fffbe8 45%, #FFF6D0 100%)"
+  },
+  "餅舖": {
+    type: "呂順興餅舖",
+    tagline: "承載歲月人情味的暖心烘烤者",
+    img: "呂順興.png",
+    headerColor: "#B98F6E",
+    accentColor: "#E5C9AE",
+    orbs: [
+      "radial-gradient(ellipse at center, rgba(94,76,62,0.55) 0%, rgba(185,143,110,0.26) 45%, rgba(229,201,174,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(185,143,110,0.48) 0%, rgba(229,201,174,0.24) 45%, rgba(235,217,200,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(94,76,62,0.45) 0%, rgba(185,143,110,0.22) 45%, rgba(229,201,174,0) 80%)",
+      "radial-gradient(ellipse at center, rgba(167,140,118,0.42) 0%, rgba(235,217,200,0.2) 45%, rgba(235,217,200,0) 80%)"
+    ],
+    radar: [32, 58, 48, 68, 78],
+    traits: ["溫慢念舊","知進知退","豁達智慧"],
+    traitsFull: [
+      { key: "核心特質：", val: "甜而不膩、越陳越香、重情重義" },
+      { key: "優點：",     val: "自帶復古溫暖的魅力。懂得拿捏分寸、體貼不討好，能把生活中的苦，烘焙成剛剛好的甘甜。" },
+      { key: "隱性盲點：", val: "太念舊、太看重人情，有時候容易被過去的習慣或舊人舊事給牽絆住，而忘了要大步往前看。" }
+    ],
+    desc: "百年老店的傳統客家糕餅，歷經數代烤爐淬鍊，依然遵循手工製作。那份經得起高溫烘烤、甜而不膩的古早滋味，象徵妳重情重義且懂得拿捏分寸，能把生活苦澀烘焙成剛剛好的甘甜。",
+    buddy:    { name: "鳳嬌客家傳統米食", img: "呂順興.png" },
+    conflict: { name: "新埔柿染坊",   img: "柿染.png" },
+    radarColor: "#B98F6E",
+    btnGradient: "radial-gradient(ellipse at center, #ffffff 0%, #ead9c7 45%, #B98F6E 100%)"
+  }
+};
+
+// ── 狀態 ──
+let Qs = [];        // 當局隨機打亂的15題
+let cur = 0;
+let ans = [];       // 每題選的 type
+let busy = false;
+
+// Fisher-Yates shuffle
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── 淡入淡出切換 ──
+function fadeTransition(hideEl, showEl, callback) {
+  hideEl.classList.add('fade-out');
+  setTimeout(() => {
+    hideEl.style.display = 'none';
+    hideEl.classList.remove('fade-out');
+    if (callback) callback();
+    showEl.style.display = 'flex';
+    showEl.style.flexDirection = 'column';
+    showEl.classList.add('fade-in');
+    setTimeout(() => showEl.classList.remove('fade-in'), 400);
+  }, 300);
+}
+
+function showStart2() {
+  const s1 = document.getElementById('startScreen1');
+  const s2 = document.getElementById('startScreen2');
+  fadeTransition(s1, s2);
+}
+
+function goStartQuiz() {
+  const s2 = document.getElementById('startScreen2');
+  const qw = document.getElementById('quizWrap');
+  fadeTransition(s2, qw, () => {
+    qw.style.display = 'flex';
+  });
+  // init quiz inside transition
+  setTimeout(() => startQuiz(), 0);
+}
+
+function startQuiz() {
+  // 打亂題目順序，每題選項也隨機打亂
+  Qs = shuffle(ALL_QS).map(q => ({
+    q: q.q,
+    opts: shuffle(q.opts)
+  }));
+  ans = new Array(Qs.length).fill(null);
+  cur = 0;
+  render();
+}
+
+function setProgress(idx) {
+  const pct = (idx / Qs.length) * 100;
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progStar').style.left = Math.max(pct, 2) + '%';
+}
+
+function render() {
+  const q = Qs[cur];
+  document.getElementById('qNum').textContent = `Q${cur + 1}.`;
+  document.getElementById('qTxt').textContent = q.q;
+
+  const opts = document.getElementById('opts');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = opt.text;
+    btn.onclick = () => pick(opt.type, btn);
+    opts.appendChild(btn);
+  });
+
+  setProgress(cur);
+  document.getElementById('btnPrev').classList.toggle('hide', cur === 0);
+  document.getElementById('btnNext').classList.toggle('hide', ans[cur] === null || cur === Qs.length - 1);
+}
+
+function pick(type, btn) {
+  if (busy) return;
+  busy = true;
+  ans[cur] = type;
+  btn.classList.add('flash');
+
+  setTimeout(() => {
+    btn.classList.remove('flash');
+    busy = false;
+    if (cur < Qs.length - 1) {
+      cur++;
+      render();
+    } else {
+      showResult();
+    }
+  }, 320);
+}
+
+function go(dir) {
+  if (busy) return;
+  cur = Math.max(0, Math.min(Qs.length - 1, cur + dir));
+  render();
+}
+
+function showResult() {
+  const tally = { "戰鬥巷": 0, "潘屋": 0, "仙草窩": 0, "柿染坊": 0, "鳳嬌": 0, "豆腐店": 0, "餅舖": 0 };
+  ans.forEach(t => { if (t) tally[t]++; });
+  const best = Object.entries(tally).sort((a,b) => b[1]-a[1])[0][0];
+  const r = RESULTS[best];
+
+  document.getElementById('progFill').style.width = '100%';
+  document.getElementById('progStar').style.left = '97%';
+
+  // 儲存給分享卡片用
+  currentResult = r;
+
+  // Header color
+  document.getElementById('resHdL').style.color = r.headerColor;
+  document.getElementById('resHdR').style.color = r.headerColor;
+
+  // Hero — apply per-character size class
+  document.getElementById('resBgTitle').innerHTML = r.titleBreak || r.type;
+  const charImg = document.getElementById('resCharImg');
+  charImg.src = r.img;
+  // remove old char class
+  charImg.className = 'res-char-img';
+  const charKey = r.img.replace('.png',''); // e.g. "仙草"
+  charImg.classList.add('char-' + charKey);
+
+  // Card title (bold white) / subtitle (regular white)
+  document.getElementById('resCardTitle').textContent = r.type;
+  document.getElementById('resCardTitle').style.color = '#fff';
+  document.getElementById('resCardSubtitle').textContent = r.tagline;
+  document.getElementById('resCardSubtitle').style.color = '#fff';
+
+  // Traits
+  const traitsEl = document.getElementById('resTraitsNew');
+  traitsEl.innerHTML = '';
+  (r.traitsFull || r.traits).forEach(t => {
+    const d = document.createElement('div');
+    d.className = 'res-trait-line';
+    d.style.color = r.accentColor;
+    d.innerHTML = `<span class="res-trait-key">${t.key}</span>${t.val}`;
+    traitsEl.appendChild(d);
+  });
+
+  // Description (accent color, regular)
+  const descEl = document.getElementById('resDescNew');
+  descEl.textContent = r.desc;
+  descEl.style.color = r.accentColor;
+
+  // Buddies — labels in accent color
+  document.getElementById('buddyLabel1').style.color = r.accentColor;
+  document.getElementById('buddyLabel2').style.color = r.accentColor;
+  document.getElementById('buddyImg1').src = r.buddy.img;
+  document.getElementById('buddyName1').textContent = r.buddy.name;
+  document.getElementById('buddyImg2').src = r.conflict.img;
+  document.getElementById('buddyName2').textContent = r.conflict.name;
+
+  // 戰鬥巷的 buddy 圖放大
+  const buddySize = (r.img === '戰鬥.png') ? '130px' : '90px';
+  const buddyH   = (r.img === '戰鬥.png') ? '165px' : '120px';
+  document.querySelectorAll('.res-buddy-img').forEach(img => {
+    img.style.width  = buddySize;
+    img.style.height = buddyH;
+  });
+
+  // 4 orbs
+  ['resOrb1','resOrb2','resOrb3','resOrb4'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.style.background = r.orbs[i];
+  });
+
+  // Restart btn
+  const btn = document.getElementById('resRestartBtn');
+  btn.style.background = r.btnGradient;
+
+  // Download link — themed to character color
+  const dlLink = document.getElementById('resDownloadLink');
+  dlLink.style.color = r.headerColor;
+  dlLink.classList.remove('downloading');
+
+  // Radar (labels in accent color)
+  drawRadar(r.radar, r.radarColor, r.accentColor);
+
+  // Transition
+  const qw = document.getElementById('quizWrap');
+  const resultEl = document.getElementById('result');
+  document.getElementById('resCard').classList.remove('visible');
+
+  fadeTransition(qw, resultEl, () => {
+    // 用雙 rAF 確保 DOM 完全繪製後才捲動到頂
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        resultEl.scrollTop = 0;
+        const h = resultEl.scrollHeight;
+        document.getElementById('resPageBg').style.height = h + 'px';
+        setTimeout(() => {
+          document.getElementById('resCard').classList.add('visible');
+        }, 100);
+      });
+    });
+  });
+}
+
+// ── 雷達圖（標籤在端點外側）──
+const RADAR_LABELS = ['突圍行動力','自我核心感','逆境轉化率','溫潤療癒力','大局理智度'];
+// 順序對應角度：上、右上、右下、左下、左上（五角形）
+
+function drawRadar(values, color, accentColor) {
+  const canvas = document.getElementById('radarCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = 280, H = 260;
+  canvas.width = W; canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+
+  const cx = W / 2, cy = H / 2 + 8;
+  const maxR = 80; // radius of pentagon
+  const n = 5;
+  const angleOffset = -Math.PI / 2; // top = index 0
+  const angle = i => (2 * Math.PI * i / n) + angleOffset;
+
+  // Grid rings
+  for (let ring = 1; ring <= 4; ring++) {
+    const r = maxR * ring / 4;
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const a = angle(i);
+      const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Spokes
+  for (let i = 0; i < n; i++) {
+    const a = angle(i);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + maxR * Math.cos(a), cy + maxR * Math.sin(a));
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Data polygon
+  ctx.beginPath();
+  values.forEach((v, i) => {
+    const r = maxR * v / 100;
+    const a = angle(i);
+    const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  const hx = color, hr = parseInt(hx.slice(1,3),16), hg = parseInt(hx.slice(3,5),16), hb = parseInt(hx.slice(5,7),16);
+  ctx.fillStyle = `rgba(${hr},${hg},${hb},0.22)`;
+  ctx.fill();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.8;
+  ctx.shadowColor = color; ctx.shadowBlur = 8;
+  ctx.stroke(); ctx.shadowBlur = 0;
+
+  // Dots
+  values.forEach((v, i) => {
+    const r = maxR * v / 100;
+    const a = angle(i);
+    ctx.beginPath();
+    ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), 3, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.shadowColor = color; ctx.shadowBlur = 6;
+    ctx.fill(); ctx.shadowBlur = 0;
+  });
+
+  // Labels: place as DOM elements at vertex positions
+  const wrap = document.getElementById('radarWrap');
+  wrap.querySelectorAll('.radar-label-pos').forEach(e => e.remove());
+  const labelOffset = 22; // px beyond maxR
+  RADAR_LABELS.forEach((label, i) => {
+    const a = angle(i);
+    const r = maxR + labelOffset;
+    const lx = cx + r * Math.cos(a);
+    const ly = cy + r * Math.sin(a);
+    const span = document.createElement('span');
+    span.className = 'radar-label-pos';
+    span.textContent = label;
+    span.style.left = lx + 'px';
+    span.style.top  = ly + 'px';
+    span.style.color = accentColor || 'rgba(255,255,255,0.55)';
+    wrap.appendChild(span);
+  });
+}
+
+function restart() {
+  const res = document.getElementById('result');
+  const s1  = document.getElementById('startScreen1');
+  fadeTransition(res, s1, () => {
+    document.getElementById('startScreen2').style.display = 'none';
+    document.getElementById('progFill').style.width = '0%';
+    document.getElementById('progStar').style.left = '2%';
+  });
+}
+
+// ── 長按觸發分享卡片 ──
+let pressTimer = null;
+let currentResult = null;
+
+function setupLongPress() {
+  const card = document.getElementById('resCard');
+  const start = () => {
+    pressTimer = setTimeout(() => {
+      navigator.vibrate && navigator.vibrate(40);
+      openShare();
+    }, 600);
+  };
+  const cancel = () => clearTimeout(pressTimer);
+  card.addEventListener('touchstart', start, { passive: true });
+  card.addEventListener('touchend',   cancel);
+  card.addEventListener('touchmove',  cancel);
+  card.addEventListener('mousedown',  start);
+  card.addEventListener('mouseup',    cancel);
+  card.addEventListener('mouseleave', cancel);
+}
+
+function openShare() {
+  document.getElementById('shareOverlay').classList.add('show');
+  applyShareBtnColor();
+  drawShareCard();
+}
+
+function applyShareBtnColor() {
+  if (!currentResult) return;
+  const igBtn = document.querySelector('.share-act-btn.ig');
+  if (igBtn) {
+    igBtn.style.background = currentResult.btnGradient;
+    igBtn.style.color = '#514242';
+  }
+}
+
+function closeShare(e) {
+  if (e.target === document.getElementById('shareOverlay'))
+    document.getElementById('shareOverlay').classList.remove('show');
+}
+function closeShareBtn() {
+  document.getElementById('shareOverlay').classList.remove('show');
+}
+function downloadCard() {
+  const cv = document.querySelector('#shareCard canvas');
+  if (!cv) return;
+  const a = document.createElement('a');
+  a.download = `新埔女路_${currentResult ? currentResult.type : '結果'}.png`;
+  a.href = cv.toDataURL('image/png');
+  a.click();
+}
+
+// ── 點擊「(按此以下載結果)」：開啟燈箱預覽 ──
+function quickDownload() {
+  if (!currentResult) return;
+  document.getElementById('shareOverlay').classList.add('show');
+  applyShareBtnColor();
+  drawShareCard();
+}
+
+// ── 分享到 Instagram 限動 ──
+function shareToIG() {
+  const cv = document.querySelector('#shareCard canvas');
+  if (!cv) return;
+  // 轉 blob 並嘗試 Web Share API
+  cv.toBlob(async (blob) => {
+    const file = new File([blob], '新埔女路結果.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: '我的新埔女路測驗結果',
+          text: `我是「${currentResult ? currentResult.type : '新埔女路'}」！快來測測妳是哪種新埔美少女！`
+        });
+      } catch (e) {
+        // 使用者取消或不支援，改為下載
+        downloadCard();
+      }
+    } else {
+      // 不支援 Web Share API，fallback 下載後提示
+      downloadCard();
+      setTimeout(() => alert('請下載圖片後，手動上傳至 Instagram 限時動態 📷'), 400);
+    }
+  }, 'image/png');
+}
+
+// ── Canvas 繪製分享卡片：左上標題／左標籤＋右雷達／中簡介／下美少女連線 ──
+const RADAR_LABELS_CV = ['突圍行動力','自我核心感','逆境轉化率','溫潤療癒力','大局理智度'];
+
+function drawShareCard(onDone) {
+  const r = currentResult;
+  if (!r) { onDone && onDone(); return; }
+
+  let loaded = 0;
+  const imgs = {};
+  const srcs = {
+    hero: r.img,
+    buddy: r.buddy.img,
+    conflict: r.conflict.img
+  };
+
+  const tryDraw = () => {
+    loaded++;
+    if (loaded >= 3) layoutAndDraw(r, imgs.hero, imgs.buddy, imgs.conflict, onDone);
+  };
+
+  // 先嘗試不設 crossOrigin（本機同源最可靠）
+  Object.entries(srcs).forEach(([key, src]) => {
+    const img = new Image();
+    img.onload = () => { imgs[key] = img; tryDraw(); };
+    img.onerror = () => {
+      // 失敗時嘗試從 DOM 取
+      const domMap = { hero: 'resCharImg', buddy: 'buddyImg1', conflict: 'buddyImg2' };
+      const domEl = document.getElementById(domMap[key]);
+      imgs[key] = (domEl && domEl.naturalWidth) ? domEl : new Image();
+      tryDraw();
+    };
+    img.src = src;
+  });
+}
+
+function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
+  const W = 648;
+  const cx = 36, cw = W - 72;
+  const contentX = cx + 36, contentW = cw - 72;
+
+  // ── 尺寸計算 ──
+  const hashtagH = 34, hashtagGap = 10;
+  const traitsH = r.traits.length * hashtagH + (r.traits.length - 1) * hashtagGap;
+
+  // 右側雷達：maxR 60 + label 24 + 右留白 52px
+  const radarMaxR = 60, radarLabelOffset = 24;
+  const radarDiam  = (radarMaxR + radarLabelOffset) * 2;
+  const radarRightPad = 52;                      // 雷達區右側留白
+  const radarAreaW = radarDiam + radarRightPad;  // 雷達佔用的總欄寬
+  const leftW = contentW - radarAreaW - 20;      // 左側 hashtag 欄寬
+  // 雷達圓心：從左欄右端 + 20 間距 + radarDiam/2，右側自然留白
+  const radarCentreX = contentX + leftW + 20 + (radarDiam / 2);
+  const radarH = radarDiam + 14;
+
+  const rowH = Math.max(traitsH, radarH);
+
+  // 簡介量測
+  const mcv = document.createElement('canvas');
+  const mctx = mcv.getContext('2d');
+  mctx.font = '400 19px "Noto Serif TC",serif';
+  const descLineH = 30;
+  const descLines = measureWrapLines(mctx, r.desc, contentW);
+  const descH = descLines * descLineH;
+
+  const titleBlockH = 124;
+  const rowTopGap = 36;
+  const afterRowGap = 30;
+  const descTitleH = 38;
+  const afterDescGap = 28;
+  const buddyTitleH = 36;
+  const buddyImgH = 160;
+  const buddyRowH = 26 + buddyImgH + 10 + 24;
+  const bottomPad = 60;
+
+  const ch = titleBlockH + rowTopGap + rowH + afterRowGap + descTitleH + descH + afterDescGap + buddyTitleH + buddyRowH + bottomPad;
+  const heroH = 560;
+  const cy = heroH;
+  const H = cy + ch + 70;
+
+  // ── 建立畫布 ──
+  const container = document.getElementById('shareCard');
+  container.innerHTML = '';
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  cv.style.width = '100%';
+  cv.style.height = 'auto';
+  cv.style.display = 'block';
+  container.appendChild(cv);
+  const ctx = cv.getContext('2d');
+
+  // 背景
+  ctx.fillStyle = '#18191B';
+  ctx.fillRect(0, 0, W, H);
+
+  // ── 3個光暈（參照原始設計位置）──
+  // 1: 角色左後 — hero zone 左側
+  drawOrbCv(ctx, r.orbs[0], -200, 20, 580, 320, -20);
+  // 2: 角色右後 — hero zone 右側
+  drawOrbCv(ctx, r.orbs[1], W - 60, 60, 500, 280, 15);
+  // 3: 美少女連線後方 — 卡片下段左側
+  drawOrbCv(ctx, r.orbs[2], -140, cy + ch - buddyRowH - buddyTitleH - 80, 480, 280, -18);
+
+  // ── 頂部標頭 ──
+  ctx.font = '500 22px "Noto Serif TC",serif';
+  ctx.fillStyle = r.headerColor;
+  ctx.textAlign = 'left';  ctx.fillText('新理測驗：新埔女路', 40, 56);
+  ctx.textAlign = 'right'; ctx.fillText('Her Story of XinPu', W - 40, 56);
+
+  // ── 背景大字 ──
+  const bgFs = r.type.length <= 4 ? 110 : r.type.length <= 5 ? 92 : r.type.length <= 6 ? 76 : 62;
+  ctx.font = `900 ${bgFs}px "Noto Serif TC",serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.18)';
+  ctx.textAlign = 'center';
+  if (r.titleBreak) {
+    const parts = r.titleBreak.replace(/<br>/g,'|').split('|');
+    ctx.fillText(parts[0], W/2, 150);
+    ctx.fillText(parts[1] || '', W/2, 150 + bgFs + 8);
+  } else {
+    ctx.fillText(r.type, W/2, 185);
+  }
+
+  // ── 角色圖：優先用已載入的 heroImg，fallback 到 DOM ──
+  function tryDrawChar() {
+    const sources = [heroImg, document.getElementById('resCharImg')];
+    for (const img of sources) {
+      if (img && img.naturalWidth && img.naturalHeight) {
+        const ih = 420;
+        const iw = img.naturalWidth * (ih / img.naturalHeight);
+        ctx.drawImage(img, (W - iw) / 2, 120, iw, ih);
+        return;
+      }
+    }
+  }
+  tryDrawChar();
+
+  // ── 玻璃卡片 ──
+  rrect(ctx, cx, cy, cw, ch, 30);
+  ctx.fillStyle = 'rgba(255,255,255,0.10)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // 標題
+  ctx.textAlign = 'left';
+  ctx.font = '900 46px "Noto Serif TC",serif';
+  ctx.fillStyle = '#fff';
+  ctx.fillText(r.type, contentX, cy + 60);
+
+  // 副標
+  ctx.font = '400 22px "Noto Serif TC",serif';
+  ctx.fillStyle = '#fff';
+  ctx.fillText(r.tagline, contentX, cy + 96);
+
+  // 分隔線
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(contentX, cy + 116); ctx.lineTo(contentX + contentW, cy + 116); ctx.stroke();
+
+  // ── 左：Hashtag 標籤 ──
+  let ty = cy + 116 + rowTopGap;
+  ctx.textAlign = 'left';
+  r.traits.forEach(tag => {
+    const label = '#' + (typeof tag === 'string' ? tag : String(tag.key).replace('：','').replace(':',''));
+    ctx.font = '700 20px "Noto Serif TC",serif';
+    const tw = ctx.measureText(label).width;
+    const tagH = 34, tagPad = 16, tagR = 17;
+    const tagW = tw + tagPad * 2;
+    rrect(ctx, contentX, ty, tagW, tagH, tagR);
+    ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = r.accentColor;
+    ctx.fillText(label, contentX + tagPad, ty + tagH * 0.68);
+    ty += tagH + hashtagGap;
+  });
+
+  // ── 右：雷達圖 ──
+  const radarCy = cy + 116 + rowTopGap + radarH / 2 - 6;
+  drawRadarCv(ctx, radarCentreX, radarCy, radarMaxR, r.radar, r.radarColor, r.accentColor, radarLabelOffset);
+
+  // ── 簡介 ──
+  let dy = cy + 116 + rowTopGap + rowH + afterRowGap;
+  ctx.font = '900 24px "Noto Serif TC",serif';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'left';
+  ctx.fillText('簡介：', contentX, dy + 22);
+  dy += descTitleH;
+  ctx.font = '400 19px "Noto Serif TC",serif';
+  ctx.fillStyle = r.accentColor;
+  wrapTextCv(ctx, r.desc, contentX, dy + 18, contentW, descLineH);
+  dy += descH + afterDescGap;
+
+  // ── 美少女連線 ──
+  ctx.font = '900 24px "Noto Serif TC",serif';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'left';
+  ctx.fillText('美少女連線：', contentX, dy + 22);
+  dy += buddyTitleH;
+
+  const colW = contentW / 2;
+
+  // buddy 圖：優先 preloaded，fallback DOM
+  function getBuddyImg(preloaded, domId) {
+    if (preloaded && preloaded.naturalWidth) return preloaded;
+    const el = document.getElementById(domId);
+    if (el && el.naturalWidth) return el;
+    return null;
+  }
+  const b1 = getBuddyImg(buddyImg, 'buddyImg1');
+  const b2 = getBuddyImg(conflictImg, 'buddyImg2');
+  drawBuddyCv(ctx, b1, '合拍美少女：', r.buddy.name, contentX, dy, colW - 14, buddyImgH, r.accentColor);
+  drawBuddyCv(ctx, b2, '衝突美少女：', r.conflict.name, contentX + colW + 14, dy, colW - 14, buddyImgH, r.accentColor);
+
+  // 浮水印
+  ctx.font = '400 19px "Noto Serif TC",serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.textAlign = 'center';
+  ctx.fillText('新埔女路 × Her Story of XinPu', W / 2, H - 34);
+
+  onDone && onDone();
+}
+
+function drawBuddyCv(ctx, img, label, name, x, y, w, imgH, accentColor) {
+  ctx.textAlign = 'left';
+  ctx.font = '400 16px "Noto Serif TC",serif';
+  ctx.fillStyle = accentColor;
+  ctx.fillText(label, x, y + 16);
+
+  const imgTop = y + 30;
+  if (img.naturalWidth) {
+    const iw = img.naturalWidth * (imgH / img.naturalHeight);
+    const ix = x + (w - iw) / 2;
+    ctx.drawImage(img, ix, imgTop, iw, imgH);
+  }
+
+  ctx.textAlign = 'center';
+  ctx.font = '400 15px "Noto Serif TC",serif';
+  ctx.fillStyle = '#fff';
+  ctx.fillText(name, x + w / 2, imgTop + imgH + 24);
+  ctx.textAlign = 'left';
+}
+
+function drawOrbCv(ctx, gradStr, x, y, w, h, angleDeg) {
+  const m = gradStr.match(/rgba\([^)]+\)/g);
+  if (!m) return;
+  ctx.save();
+  ctx.translate(x + w/2, y + h/2);
+  ctx.rotate(angleDeg * Math.PI / 180);
+  const R = Math.max(w, h) / 2;
+  const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, R);
+  grd.addColorStop(0,    m[0] || 'rgba(0,0,0,0)');
+  grd.addColorStop(0.45, m[1] || 'rgba(0,0,0,0)');
+  grd.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.scale(w / R / 2, h / R / 2);
+  ctx.fillStyle = grd;
+  ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+// ── Canvas 版雷達圖（含端點外側小標籤）──
+function drawRadarCv(ctx, cx, cy, maxR, values, color, accentColor, labelOffset) {
+  const n = 5;
+  const angleOffset = -Math.PI / 2;
+  const angle = i => (2 * Math.PI * i / n) + angleOffset;
+
+  for (let ring = 1; ring <= 4; ring++) {
+    const rr = maxR * ring / 4;
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const a = angle(i);
+      const x = cx + rr * Math.cos(a), y = cy + rr * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  for (let i = 0; i < n; i++) {
+    const a = angle(i);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + maxR * Math.cos(a), cy + maxR * Math.sin(a));
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  ctx.beginPath();
+  values.forEach((v, i) => {
+    const rr = maxR * v / 100;
+    const a = angle(i);
+    const x = cx + rr * Math.cos(a), y = cy + rr * Math.sin(a);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  const hr = parseInt(color.slice(1,3),16), hg = parseInt(color.slice(3,5),16), hb = parseInt(color.slice(5,7),16);
+  ctx.fillStyle = `rgba(${hr},${hg},${hb},0.24)`;
+  ctx.fill();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  values.forEach((v, i) => {
+    const rr = maxR * v / 100;
+    const a = angle(i);
+    ctx.beginPath();
+    ctx.arc(cx + rr * Math.cos(a), cy + rr * Math.sin(a), 3.4, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  });
+
+  ctx.font = '400 12.5px "Noto Serif TC",serif';
+  ctx.fillStyle = accentColor || 'rgba(255,255,255,0.6)';
+  RADAR_LABELS_CV.forEach((label, i) => {
+    const a = angle(i);
+    const rr = maxR + labelOffset;
+    const lx = cx + rr * Math.cos(a), ly = cy + rr * Math.sin(a);
+    ctx.textAlign = Math.cos(a) > 0.15 ? 'left' : Math.cos(a) < -0.15 ? 'right' : 'center';
+    ctx.fillText(label, lx, ly + 4);
+  });
+  ctx.textAlign = 'left';
+}
+
+function rrect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
+
+function wrapTextCv(ctx, text, x, y, maxW, lineH) {
+  const chars = [...text]; let line = '', ly = y, count = 1;
+  for (const ch of chars) {
+    const test = line + ch;
+    if (ctx.measureText(test).width > maxW && line !== '') {
+      ctx.fillText(line, x, ly); line = ch; ly += lineH; count++;
+    } else { line = test; }
+  }
+  if (line) ctx.fillText(line, x, ly);
+  return count;
+}
+
+// 與 wrapTextCv 邏輯相同，但只計算行數、不繪製（用於事先量測卡片高度）
+function measureWrapLines(ctx, text, maxW) {
+  const chars = [...text]; let line = '', count = 1;
+  for (const ch of chars) {
+    const test = line + ch;
+    if (ctx.measureText(test).width > maxW && line !== '') {
+      line = ch; count++;
+    } else { line = test; }
+  }
+  return count;
+}
+
+// ── 開發者後台 Admin Panel ──
+function toggleAdmin() {
+  document.getElementById('adminPanel').classList.toggle('show');
+}
+
+function hideAllScreens() {
+  ['startScreen1','startScreen2','quizWrap','result'].forEach(id => {
+    const el = document.getElementById(id);
+    el.style.display = 'none';
+    el.classList.remove('fade-in','fade-out');
+  });
+}
+
+function adminGoStart1() {
+  hideAllScreens();
+  const s1 = document.getElementById('startScreen1');
+  s1.style.display = 'flex'; s1.style.flexDirection = 'column';
+  toggleAdmin();
+}
+function adminGoStart2() {
+  hideAllScreens();
+  const s2 = document.getElementById('startScreen2');
+  s2.style.display = 'flex'; s2.style.flexDirection = 'column';
+  toggleAdmin();
+}
+function adminGoQuestion(idx) {
+  hideAllScreens();
+  // 用未打亂的原始題序，方便對照題號
+  Qs = ALL_QS.map(q => ({ q: q.q, opts: [...q.opts] }));
+  ans = new Array(Qs.length).fill(null);
+  cur = idx;
+  const qw = document.getElementById('quizWrap');
+  qw.style.display = 'flex'; qw.style.flexDirection = 'column';
+  render();
+  toggleAdmin();
+}
+function adminGoResult(key) {
+  hideAllScreens();
+  const r = RESULTS[key];
+  currentResult = r;
+
+  document.getElementById('resHdL').style.color = r.headerColor;
+  document.getElementById('resHdR').style.color = r.headerColor;
+  document.getElementById('resBgTitle').innerHTML = r.titleBreak || r.type;
+  const charImg = document.getElementById('resCharImg');
+  charImg.src = r.img;
+  charImg.className = 'res-char-img';
+  charImg.classList.add('char-' + r.img.replace('.png',''));
+
+  document.getElementById('resCardTitle').textContent = r.type;
+  document.getElementById('resCardTitle').style.color = '#fff';
+  document.getElementById('resCardSubtitle').textContent = r.tagline;
+  document.getElementById('resCardSubtitle').style.color = '#fff';
+
+  const traitsEl = document.getElementById('resTraitsNew');
+  traitsEl.innerHTML = '';
+  (r.traitsFull || r.traits).forEach(t => {
+    const d = document.createElement('div');
+    d.className = 'res-trait-line'; d.style.color = r.accentColor;
+    d.innerHTML = `<span class="res-trait-key">${t.key}</span>${t.val}`;
+    traitsEl.appendChild(d);
+  });
+
+  const descEl = document.getElementById('resDescNew');
+  descEl.textContent = r.desc; descEl.style.color = r.accentColor;
+
+  document.getElementById('buddyLabel1').style.color = r.accentColor;
+  document.getElementById('buddyLabel2').style.color = r.accentColor;
+  document.getElementById('buddyImg1').src = r.buddy.img;
+  document.getElementById('buddyName1').textContent = r.buddy.name;
+  document.getElementById('buddyImg2').src = r.conflict.img;
+  document.getElementById('buddyName2').textContent = r.conflict.name;
+
+  const buddySize = (r.img === '戰鬥.png') ? '130px' : '90px';
+  const buddyH   = (r.img === '戰鬥.png') ? '165px' : '120px';
+  document.querySelectorAll('.res-buddy-img').forEach(img => {
+    img.style.width = buddySize; img.style.height = buddyH;
+  });
+
+  ['resOrb1','resOrb2','resOrb3','resOrb4'].forEach((id, i) => {
+    document.getElementById(id).style.background = r.orbs[i];
+  });
+
+  const btn = document.getElementById('resRestartBtn');
+  btn.style.background = r.btnGradient;
+
+  const dlLink = document.getElementById('resDownloadLink');
+  dlLink.style.color = r.headerColor;
+  dlLink.classList.remove('downloading');
+
+  drawRadar(r.radar, r.radarColor, r.accentColor);
+
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'flex'; resultEl.style.flexDirection = 'column';
+  document.getElementById('resCard').classList.add('visible');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      resultEl.scrollTop = 0;
+      const h = resultEl.scrollHeight;
+      document.getElementById('resPageBg').style.height = h + 'px';
+    });
+  });
+
+  toggleAdmin();
+}
+
+// 動態建立題目按鈕（1~15）
+(function buildAdminQuestionList() {
+  const grid = document.getElementById('adminQList');
+  for (let i = 0; i < 15; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'admin-btn';
+    btn.textContent = 'Q' + (i + 1);
+    btn.onclick = () => adminGoQuestion(i);
+    grid.appendChild(btn);
+  }
+})();
+
+// 動態建立結果按鈕（依 RESULTS 的 key 順序）
+(function buildAdminResultList() {
+  const col = document.getElementById('adminResultList');
+  Object.keys(RESULTS).forEach(key => {
+    const r = RESULTS[key];
+    const btn = document.createElement('button');
+    btn.className = 'admin-result-btn';
+    btn.innerHTML = `
+      <span class="admin-result-dot" style="background:${r.headerColor}"></span>
+      <span class="admin-result-label">${r.type}</span>
+      <span class="admin-result-sub">${r.tagline}</span>
+    `;
+    btn.onclick = () => adminGoResult(key);
+    col.appendChild(btn);
+  });
+})();
+
+setupLongPress();
+
+// ── 隱藏快捷鍵：Ctrl+Shift+A 開啟/關閉後台 ──
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+    e.preventDefault();
+    toggleAdmin();
+  }
+});
+</script>
+</body>
+</html>
