@@ -916,7 +916,6 @@ html, body {
   <!-- ── 分享燈箱 Overlay ── -->
   <div id="shareOverlay" onclick="closeShare(event)">
     <div class="share-lightbox" onclick="event.stopPropagation()">
-      <div class="share-lightbox-title">點擊空白處關閉 · 下載後可分享限動</div>
       <div class="share-card-scroll">
         <div id="shareCard"><!-- canvas rendered by JS --></div>
       </div>
@@ -1708,7 +1707,7 @@ function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
   const contentX = cx + 36, contentW = cw - 72;
 
   // ── 尺寸計算 ──
-  const hashtagH = 34, hashtagGap = 10;
+  const hashtagH = 50, hashtagGap = 15;
   const traitsH = r.traits.length * hashtagH + (r.traits.length - 1) * hashtagGap;
 
   // 右側雷達：maxR 60 + label 24 + 右留白 52px
@@ -1827,9 +1826,9 @@ function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
   ctx.textAlign = 'left';
   r.traits.forEach(tag => {
     const label = '#' + (typeof tag === 'string' ? tag : String(tag.key).replace('：','').replace(':',''));
-    ctx.font = '700 20px "Noto Serif TC",serif';
+    ctx.font = '700 30px "Noto Serif TC",serif';
     const tw = ctx.measureText(label).width;
-    const tagH = 34, tagPad = 16, tagR = 17;
+    const tagH = 50, tagPad = 24, tagR = 25;
     const tagW = tw + tagPad * 2;
     rrect(ctx, contentX, ty, tagW, tagH, tagR);
     ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fill();
