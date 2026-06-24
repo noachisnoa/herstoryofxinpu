@@ -1702,48 +1702,8 @@ function drawShareCard(onDone) {
 }
 
 function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
-  const W = 648;
-  const cx = 36, cw = W - 72;
-  const contentX = cx + 36, contentW = cw - 72;
-
-  // ── 尺寸計算 ──
-  const hashtagH = 50, hashtagGap = 15;
-  const traitsH = r.traits.length * hashtagH + (r.traits.length - 1) * hashtagGap;
-
-  // 右側雷達：maxR 60 + label 24 + 右留白 52px
-  const radarMaxR = 60, radarLabelOffset = 24;
-  const radarDiam  = (radarMaxR + radarLabelOffset) * 2;
-  const radarRightPad = 52;                      // 雷達區右側留白
-  const radarAreaW = radarDiam + radarRightPad;  // 雷達佔用的總欄寬
-  const leftW = contentW - radarAreaW - 20;      // 左側 hashtag 欄寬
-  // 雷達圓心：從左欄右端 + 20 間距 + radarDiam/2，右側自然留白
-  const radarCentreX = contentX + leftW + 20 + (radarDiam / 2);
-  const radarH = radarDiam + 14;
-
-  const rowH = Math.max(traitsH, radarH);
-
-  // 簡介量測
-  const mcv = document.createElement('canvas');
-  const mctx = mcv.getContext('2d');
-  mctx.font = '400 19px "Noto Serif TC",serif';
-  const descLineH = 30;
-  const descLines = measureWrapLines(mctx, r.desc, contentW);
-  const descH = descLines * descLineH;
-
-  const titleBlockH = 124;
-  const rowTopGap = 36;
-  const afterRowGap = 30;
-  const descTitleH = 38;
-  const afterDescGap = 28;
-  const buddyTitleH = 36;
-  const buddyImgH = 160;
-  const buddyRowH = 26 + buddyImgH + 10 + 24;
-  const bottomPad = 60;
-
-  const ch = titleBlockH + rowTopGap + rowH + afterRowGap + descTitleH + descH + afterDescGap + buddyTitleH + buddyRowH + bottomPad;
-  const heroH = 560;
-  const cy = heroH;
-  const H = cy + ch + 70;
+  // ── 固定 9:16 畫布尺寸（2x 解析度）──
+  const W = 648, H = 1152;
 
   // ── 建立畫布 ──
   const container = document.getElementById('shareCard');
@@ -1760,41 +1720,48 @@ function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
   ctx.fillStyle = '#18191B';
   ctx.fillRect(0, 0, W, H);
 
-  // ── 3個光暈（參照原始設計位置）──
-  // 1: 角色左後 — hero zone 左側
-  drawOrbCv(ctx, r.orbs[0], -200, 20, 580, 320, -20);
-  // 2: 角色右後 — hero zone 右側
-  drawOrbCv(ctx, r.orbs[1], W - 60, 60, 500, 280, 15);
-  // 3: 美少女連線後方 — 卡片下段左側
-  drawOrbCv(ctx, r.orbs[2], -140, cy + ch - buddyRowH - buddyTitleH - 80, 480, 280, -18);
+  // ── 版面切分 ──
+  // hero 上半：角色圖 + 背景大字 = 約 44% 高
+  const heroH  = 500;
+  // 玻璃卡片：剩餘空間
+  const cardTop = heroH;
+  const cardBot = H - 20;
+  const ch = cardBot - cardTop;
+  const cx = 28, cw = W - 56;
+  const contentX = cx + 28, contentW = cw - 56;
 
-  // ── 頂部標頭 ──
-  ctx.font = '500 22px "Noto Serif TC",serif';
+  // ── 3個光暈 ──
+  drawOrbCv(ctx, r.orbs[0], -180, 10, 520, 290, -20);
+  drawOrbCv(ctx, r.orbs[1], W - 40, 50, 440, 250, 15);
+  drawOrbCv(ctx, r.orbs[2], -120, H - 340, 420, 240, -18);
+
+  // ── 標頭 ──
+  ctx.font = '500 19px "Noto Serif TC",serif';
   ctx.fillStyle = r.headerColor;
-  ctx.textAlign = 'left';  ctx.fillText('新理測驗：新埔女路', 40, 56);
-  ctx.textAlign = 'right'; ctx.fillText('Her Story of XinPu', W - 40, 56);
+  ctx.textAlign = 'left';  ctx.fillText('新理測驗：新埔女路', 36, 46);
+  ctx.textAlign = 'right'; ctx.fillText('Her Story of XinPu', W - 36, 46);
 
   // ── 背景大字 ──
-  const bgFs = r.type.length <= 4 ? 110 : r.type.length <= 5 ? 92 : r.type.length <= 6 ? 76 : 62;
+  const bgFs = r.type.length <= 4 ? 96 : r.type.length <= 5 ? 80 : r.type.length <= 6 ? 66 : 54;
   ctx.font = `900 ${bgFs}px "Noto Serif TC",serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.18)';
   ctx.textAlign = 'center';
   if (r.titleBreak) {
     const parts = r.titleBreak.replace(/<br>/g,'|').split('|');
-    ctx.fillText(parts[0], W/2, 150);
-    ctx.fillText(parts[1] || '', W/2, 150 + bgFs + 8);
+    ctx.fillText(parts[0], W/2, 130);
+    ctx.fillText(parts[1] || '', W/2, 130 + bgFs + 6);
   } else {
-    ctx.fillText(r.type, W/2, 185);
+    ctx.fillText(r.type, W/2, 165);
   }
 
-  // ── 角色圖：優先用已載入的 heroImg，fallback 到 DOM ──
+  // ── 角色圖 ──
   function tryDrawChar() {
     const sources = [heroImg, document.getElementById('resCharImg')];
     for (const img of sources) {
       if (img && img.naturalWidth && img.naturalHeight) {
-        const ih = 420;
+        const ih = 370;
         const iw = img.naturalWidth * (ih / img.naturalHeight);
-        ctx.drawImage(img, (W - iw) / 2, 120, iw, ih);
+        ctx.drawImage(img, (W - iw) / 2, 110, iw, ih);
         return;
       }
     }
@@ -1802,84 +1769,105 @@ function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
   tryDrawChar();
 
   // ── 玻璃卡片 ──
-  rrect(ctx, cx, cy, cw, ch, 30);
+  rrect(ctx, cx, cardTop, cw, ch, 26);
   ctx.fillStyle = 'rgba(255,255,255,0.10)'; ctx.fill();
   ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1.5; ctx.stroke();
 
+  // 卡片內起始 Y
+  let py = cardTop + 26;
+
   // 標題
   ctx.textAlign = 'left';
-  ctx.font = '900 46px "Noto Serif TC",serif';
+  ctx.font = '900 38px "Noto Serif TC",serif';
   ctx.fillStyle = '#fff';
-  ctx.fillText(r.type, contentX, cy + 60);
+  ctx.fillText(r.type, contentX, py + 36);
+  py += 44;
 
   // 副標
-  ctx.font = '400 22px "Noto Serif TC",serif';
+  ctx.font = '400 18px "Noto Serif TC",serif';
   ctx.fillStyle = '#fff';
-  ctx.fillText(r.tagline, contentX, cy + 96);
+  ctx.fillText(r.tagline, contentX, py + 18);
+  py += 26;
 
   // 分隔線
   ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(contentX, cy + 116); ctx.lineTo(contentX + contentW, cy + 116); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(contentX, py); ctx.lineTo(contentX + contentW, py); ctx.stroke();
+  py += 20;
 
-  // ── 左：Hashtag 標籤 ──
-  let ty = cy + 116 + rowTopGap;
-  ctx.textAlign = 'left';
+  // ── 左：Hashtag  右：雷達 ──
+  const radarMaxR = 52, radarLabelOffset = 20;
+  const radarDiam  = (radarMaxR + radarLabelOffset) * 2;
+  const radarRightPad = 40;
+  const radarAreaW = radarDiam + radarRightPad;
+  const leftW = contentW - radarAreaW - 16;
+  const radarCentreX = contentX + leftW + 16 + radarDiam / 2;
+
+  const hashtagH = 40, hashtagGap = 10;
+  const traitsH = r.traits.length * hashtagH + (r.traits.length - 1) * hashtagGap;
+  const radarH  = radarDiam + 10;
+  const rowH = Math.max(traitsH, radarH);
+
+  // 畫 hashtag
+  let ty = py;
   r.traits.forEach(tag => {
     const label = '#' + (typeof tag === 'string' ? tag : String(tag.key).replace('：','').replace(':',''));
-    ctx.font = '700 30px "Noto Serif TC",serif';
+    ctx.font = '700 24px "Noto Serif TC",serif';
     const tw = ctx.measureText(label).width;
-    const tagH = 50, tagPad = 24, tagR = 25;
-    const tagW = tw + tagPad * 2;
-    rrect(ctx, contentX, ty, tagW, tagH, tagR);
+    const tPad = 18, tR = 20;
+    const tW = Math.min(tw + tPad * 2, leftW);
+    rrect(ctx, contentX, ty, tW, hashtagH, tR);
     ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1; ctx.stroke();
-    ctx.fillStyle = r.accentColor;
-    ctx.fillText(label, contentX + tagPad, ty + tagH * 0.68);
-    ty += tagH + hashtagGap;
+    ctx.fillStyle = r.accentColor; ctx.textAlign = 'left';
+    ctx.fillText(label, contentX + tPad, ty + hashtagH * 0.68);
+    ty += hashtagH + hashtagGap;
   });
 
-  // ── 右：雷達圖 ──
-  const radarCy = cy + 116 + rowTopGap + radarH / 2 - 6;
+  // 畫雷達
+  const radarCy = py + rowH / 2;
   drawRadarCv(ctx, radarCentreX, radarCy, radarMaxR, r.radar, r.radarColor, r.accentColor, radarLabelOffset);
+  py += rowH + 20;
 
   // ── 簡介 ──
-  let dy = cy + 116 + rowTopGap + rowH + afterRowGap;
-  ctx.font = '900 24px "Noto Serif TC",serif';
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'left';
-  ctx.fillText('簡介：', contentX, dy + 22);
-  dy += descTitleH;
-  ctx.font = '400 19px "Noto Serif TC",serif';
+  ctx.font = '900 20px "Noto Serif TC",serif';
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
+  ctx.fillText('簡介：', contentX, py + 18);
+  py += 28;
+
+  const descLineH = 24;
+  const mcv = document.createElement('canvas');
+  const mctx = mcv.getContext('2d');
+  mctx.font = '400 15px "Noto Serif TC",serif';
+  const descLines = measureWrapLines(mctx, r.desc, contentW);
+  const descH = descLines * descLineH;
+  ctx.font = '400 15px "Noto Serif TC",serif';
   ctx.fillStyle = r.accentColor;
-  wrapTextCv(ctx, r.desc, contentX, dy + 18, contentW, descLineH);
-  dy += descH + afterDescGap;
+  wrapTextCv(ctx, r.desc, contentX, py + 14, contentW, descLineH);
+  py += descH + 20;
 
   // ── 美少女連線 ──
-  ctx.font = '900 24px "Noto Serif TC",serif';
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'left';
-  ctx.fillText('美少女連線：', contentX, dy + 22);
-  dy += buddyTitleH;
+  ctx.font = '900 20px "Noto Serif TC",serif';
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
+  ctx.fillText('美少女連線：', contentX, py + 18);
+  py += 30;
 
+  const buddyImgH = 130;
   const colW = contentW / 2;
-
-  // buddy 圖：優先 preloaded，fallback DOM
   function getBuddyImg(preloaded, domId) {
     if (preloaded && preloaded.naturalWidth) return preloaded;
     const el = document.getElementById(domId);
-    if (el && el.naturalWidth) return el;
-    return null;
+    return (el && el.naturalWidth) ? el : null;
   }
   const b1 = getBuddyImg(buddyImg, 'buddyImg1');
   const b2 = getBuddyImg(conflictImg, 'buddyImg2');
-  drawBuddyCv(ctx, b1, '合拍美少女：', r.buddy.name, contentX, dy, colW - 14, buddyImgH, r.accentColor);
-  drawBuddyCv(ctx, b2, '衝突美少女：', r.conflict.name, contentX + colW + 14, dy, colW - 14, buddyImgH, r.accentColor);
+  drawBuddyCv(ctx, b1, '合拍美少女：', r.buddy.name, contentX, py, colW - 12, buddyImgH, r.accentColor);
+  drawBuddyCv(ctx, b2, '衝突美少女：', r.conflict.name, contentX + colW + 12, py, colW - 12, buddyImgH, r.accentColor);
 
-  // 浮水印
-  ctx.font = '400 19px "Noto Serif TC",serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  // ── 浮水印 ──
+  ctx.font = '400 16px "Noto Serif TC",serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.22)';
   ctx.textAlign = 'center';
-  ctx.fillText('新埔女路 × Her Story of XinPu', W / 2, H - 34);
+  ctx.fillText('新埔女路 × Her Story of XinPu', W / 2, H - 12);
 
   onDone && onDone();
 }
