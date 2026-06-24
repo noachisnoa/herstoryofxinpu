@@ -922,7 +922,7 @@ html, body {
       <div class="share-actions">
         <button class="share-act-btn" onclick="closeShareBtn()">關閉</button>
         <button class="share-act-btn primary" id="downloadBtn" onclick="downloadCard()">下載圖片</button>
-        <button class="share-act-btn ig" onclick="shareToIG()">分享限動</button>
+        <button class="share-act-btn ig" onclick="shareToIG()">分享</button>
       </div>
     </div>
   </div>
@@ -1730,13 +1730,13 @@ function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
   const cx = 28, cw = W - 56;
   const contentX = cx + 28, contentW = cw - 56;
 
-  // ── 3個光暈（參照結果頁面設計）──
-  // 1: 角色左後 — hero zone 左側
-  drawOrbCv(ctx, r.orbs[0], -180, 10, 520, 290, -20);
-  // 2: 角色右後 — hero zone 右側
-  drawOrbCv(ctx, r.orbs[1], W - 30, 50, 440, 250, 15);
-  // 3: 美少女連線後方 — 卡片下段左側
-  drawOrbCv(ctx, r.orbs[2], -120, H - 320, 420, 240, -18);
+  // ── 光暈：左側兩片（上下）+ 右側一片（中間），orbs[0]/[1] 交錯 ──
+  // 左上：角色左後方
+  drawOrbCv(ctx, r.orbs[0], -220, 0, 480, 270, -20);
+  // 左下：合拍美少女左後方
+  drawOrbCv(ctx, r.orbs[0], -200, H - 320, 460, 260, -16);
+  // 右中：雷達圖右後方
+  drawOrbCv(ctx, r.orbs[1], W - 280, H / 2 - 140, 440, 250, 16);
 
   // ── 標頭 ──
   ctx.font = '500 19px "Noto Serif TC",serif';
