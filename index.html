@@ -1730,10 +1730,13 @@ function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
   const cx = 28, cw = W - 56;
   const contentX = cx + 28, contentW = cw - 56;
 
-  // ── 3個光暈 ──
+  // ── 3個光暈（參照結果頁面設計）──
+  // 1: 角色左後 — hero zone 左側
   drawOrbCv(ctx, r.orbs[0], -180, 10, 520, 290, -20);
-  drawOrbCv(ctx, r.orbs[1], W - 40, 50, 440, 250, 15);
-  drawOrbCv(ctx, r.orbs[2], -120, H - 340, 420, 240, -18);
+  // 2: 角色右後 — hero zone 右側
+  drawOrbCv(ctx, r.orbs[1], W - 30, 50, 440, 250, 15);
+  // 3: 美少女連線後方 — 卡片下段左側
+  drawOrbCv(ctx, r.orbs[2], -120, H - 320, 420, 240, -18);
 
   // ── 標頭 ──
   ctx.font = '500 19px "Noto Serif TC",serif';
@@ -1799,27 +1802,29 @@ function layoutAndDraw(r, heroImg, buddyImg, conflictImg, onDone) {
   const radarDiam  = (radarMaxR + radarLabelOffset) * 2;
   const radarRightPad = 40;
   const radarAreaW = radarDiam + radarRightPad;
+  const hashIndent = 16; // hashtag 向右縮入
   const leftW = contentW - radarAreaW - 16;
-  const radarCentreX = contentX + leftW + 16 + radarDiam / 2;
+  // 雷達圓心向左移 20px，讓右側標籤更有呼吸空間
+  const radarCentreX = contentX + leftW + 16 + radarDiam / 2 - 20;
 
   const hashtagH = 40, hashtagGap = 10;
   const traitsH = r.traits.length * hashtagH + (r.traits.length - 1) * hashtagGap;
   const radarH  = radarDiam + 10;
   const rowH = Math.max(traitsH, radarH);
 
-  // 畫 hashtag
+  // 畫 hashtag（向右縮入 hashIndent）
   let ty = py;
   r.traits.forEach(tag => {
     const label = '#' + (typeof tag === 'string' ? tag : String(tag.key).replace('：','').replace(':',''));
     ctx.font = '700 24px "Noto Serif TC",serif';
     const tw = ctx.measureText(label).width;
     const tPad = 18, tR = 20;
-    const tW = Math.min(tw + tPad * 2, leftW);
-    rrect(ctx, contentX, ty, tW, hashtagH, tR);
+    const tW = Math.min(tw + tPad * 2, leftW - hashIndent);
+    rrect(ctx, contentX + hashIndent, ty, tW, hashtagH, tR);
     ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1; ctx.stroke();
     ctx.fillStyle = r.accentColor; ctx.textAlign = 'left';
-    ctx.fillText(label, contentX + tPad, ty + hashtagH * 0.68);
+    ctx.fillText(label, contentX + hashIndent + tPad, ty + hashtagH * 0.68);
     ty += hashtagH + hashtagGap;
   });
 
@@ -1879,16 +1884,12 @@ function drawBuddyCv(ctx, img, label, name, x, y, w, imgH, accentColor) {
   ctx.fillText(label, x, y + 16);
 
   const imgTop = y + 30;
-  if (img.naturalWidth) {
+  if (img && img.naturalWidth) {
     const iw = img.naturalWidth * (imgH / img.naturalHeight);
     const ix = x + (w - iw) / 2;
     ctx.drawImage(img, ix, imgTop, iw, imgH);
   }
-
-  ctx.textAlign = 'center';
-  ctx.font = '400 15px "Noto Serif TC",serif';
-  ctx.fillStyle = '#fff';
-  ctx.fillText(name, x + w / 2, imgTop + imgH + 24);
+  // 角色名字已移除
   ctx.textAlign = 'left';
 }
 
